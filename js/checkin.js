@@ -207,11 +207,20 @@ XBM.CheckIn = (function () {
           data-uid="${user.id}"
           aria-label="Marcar no-show"
           aria-pressed="${user.status === 'noshow'}">✗</button>
+        <button class="action-btn action-btn--qr"
+          id="qr-${user.id}"
+          aria-label="Ver QR de ${user.name}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+            <path d="M14 14h3v3M17 14h3M14 17v3"/>
+          </svg>
+        </button>
       </div>
     `;
 
         card.querySelector(`#attend-${user.id}`)?.addEventListener('click', () => setStatus(user, 'attended', classKey));
         card.querySelector(`#noshow-${user.id}`)?.addEventListener('click', () => setStatus(user, 'noshow', classKey));
+        card.querySelector(`#qr-${user.id}`)?.addEventListener('click', () => XBM.QR?.generateUserQR(user));
 
         return card;
     }
@@ -341,5 +350,5 @@ XBM.CheckIn = (function () {
         document.getElementById('exportCheckinBtn')?.addEventListener('click', exportCheckin);
     }
 
-    return { init, loadClass, updateSummary };
+    return { init, loadClass, updateSummary, get _activeClassKey() { return activeClassKey; } };
 })();
