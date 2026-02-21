@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Xtreme Bike Management — Plataforma SaaS PWA para gestión de salas de cycling, reservas y asistencia en tiempo real." />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="XtremeBike" />
+  <title>Xtreme Bike Management</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet" />
+
+  <!-- Global Styles -->
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/room-map.css" />
+  <link rel="stylesheet" href="css/checkin.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SIDE NAVIGATION
+  ═══════════════════════════════════════════════════════ -->
+  <nav class="sidenav" id="sidenav" role="navigation" aria-label="Navegación principal">
+    <div class="sidenav__brand">
+      <div class="sidenav__logo-icon" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18" stroke="#E8FF00" stroke-width="2"/>
+          <circle cx="20" cy="20" r="3" fill="#E8FF00"/>
+          <line x1="20" y1="2" x2="20" y2="8" stroke="#E8FF00" stroke-width="2"/>
+          <line x1="20" y1="32" x2="20" y2="38" stroke="#E8FF00" stroke-width="2"/>
+          <line x1="2" y1="20" x2="8" y2="20" stroke="#E8FF00" stroke-width="2"/>
+          <line x1="32" y1="20" x2="38" y2="20" stroke="#E8FF00" stroke-width="2"/>
+          <line x1="6.5" y1="6.5" x2="10.7" y2="10.7" stroke="#E8FF00" stroke-width="2"/>
+          <line x1="29.3" y1="29.3" x2="33.5" y2="33.5" stroke="#E8FF00" stroke-width="2"/>
+          <line x1="33.5" y1="6.5" x2="29.3" y2="10.7" stroke="#E8FF00" stroke-width="2"/>
+          <line x1="10.7" y1="29.3" x2="6.5" y2="33.5" stroke="#E8FF00" stroke-width="2"/>
+          <polygon points="20,11 22.5,17 20,16 17.5,17" fill="#E8FF00"/>
+        </svg>
+      </div>
+      <div class="sidenav__brand-text">
+        <span class="sidenav__brand-name">XTREME BIKE</span>
+        <span class="sidenav__brand-sub">MANAGEMENT</span>
+      </div>
+    </div>
+
+    <ul class="sidenav__menu" role="list">
+      <li class="sidenav__item" role="listitem">
+        <button class="sidenav__link active" id="nav-dashboard" data-module="dashboard" aria-current="page" aria-label="Dashboard">
+          <span class="sidenav__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+          </span>
+          <span class="sidenav__label">Dashboard</span>
+        </button>
+      </li>
+      <li class="sidenav__item" role="listitem">
+        <button class="sidenav__link" id="nav-roommap" data-module="roommap" aria-label="Sala de Bikes">
+          <span class="sidenav__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="3"/>
+              <line x1="12" y1="2" x2="12" y2="7"/>
+              <line x1="12" y1="17" x2="12" y2="22"/>
+              <line x1="2" y1="12" x2="7" y2="12"/>
+              <line x1="17" y1="12" x2="22" y2="12"/>
+            </svg>
+          </span>
+          <span class="sidenav__label">Sala de Bikes</span>
+        </button>
+      </li>
+      <li class="sidenav__item" role="listitem">
+        <button class="sidenav__link" id="nav-checkin" data-module="checkin" aria-label="Check-in">
+          <span class="sidenav__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </span>
+          <span class="sidenav__label">Check-in</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="sidenav__footer">
+      <div class="sidenav__session">
+        <div class="sidenav__avatar" aria-hidden="true">A</div>
+        <div class="sidenav__session-info">
+          <span class="sidenav__session-name">Admin</span>
+          <span class="sidenav__session-role">Instructor</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile nav toggle -->
+  <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="sidenav">
+    <span class="hamburger" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </span>
+  </button>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MAIN CONTENT AREA
+  ═══════════════════════════════════════════════════════ -->
+  <main class="main-content" id="mainContent" role="main">
+
+    <!-- ── MODULE: DASHBOARD ─────────────────────────────── -->
+    <section class="module" id="module-dashboard" data-module="dashboard" aria-labelledby="dashboard-title">
+      <div class="page-header">
+        <div>
+          <p class="page-overline">Resumen General</p>
+          <h1 class="page-title" id="dashboard-title">Dashboard</h1>
+        </div>
+        <div class="page-header-actions">
+          <span class="live-badge" aria-label="Estado en vivo">
+            <span class="live-badge__dot" aria-hidden="true"></span>
+            EN VIVO
+          </span>
+          <span class="page-date" id="currentDate" aria-label="Fecha actual"></span>
+        </div>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="kpi-grid" role="list" aria-label="Indicadores clave de rendimiento">
+        <article class="kpi-card" role="listitem" aria-labelledby="kpi-ocupacion-title">
+          <div class="kpi-card__icon kpi-card__icon--neon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          </div>
+          <div class="kpi-card__body">
+            <p class="kpi-card__label" id="kpi-ocupacion-title">Ocupación</p>
+            <p class="kpi-card__value" id="kpi-ocupacion" aria-live="polite">0%</p>
+            <p class="kpi-card__sub" id="kpi-ocupacion-sub">de 20 bikes</p>
+          </div>
+          <div class="kpi-card__trend kpi-card__trend--up" aria-label="Tendencia al alza">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            <span>+12%</span>
+          </div>
+        </article>
+
+        <article class="kpi-card" role="listitem" aria-labelledby="kpi-ingresos-title">
+          <div class="kpi-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="kpi-card__body">
+            <p class="kpi-card__label" id="kpi-ingresos-title">Ingresos Hoy</p>
+            <p class="kpi-card__value" id="kpi-ingresos" aria-live="polite">$0</p>
+            <p class="kpi-card__sub">MXN del día</p>
+          </div>
+          <div class="kpi-card__trend kpi-card__trend--up" aria-label="Tendencia al alza">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            <span>+8%</span>
+          </div>
+        </article>
+
+        <article class="kpi-card" role="listitem" aria-labelledby="kpi-usuarios-title">
+          <div class="kpi-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="kpi-card__body">
+            <p class="kpi-card__label" id="kpi-usuarios-title">Usuarios Activos</p>
+            <p class="kpi-card__value" id="kpi-usuarios" aria-live="polite">0</p>
+            <p class="kpi-card__sub">registrados hoy</p>
+          </div>
+          <div class="kpi-card__trend kpi-card__trend--neutral" aria-label="Tendencia estable">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Estable</span>
+          </div>
+        </article>
+      </div>
+
+      <!-- Schedule Timeline -->
+      <div class="dash-grid">
+        <div class="dash-card">
+          <div class="dash-card__header">
+            <h2 class="dash-card__title">Clases de Hoy</h2>
+            <button class="btn btn--ghost btn--sm" id="addClassBtn" aria-label="Agregar clase">+ Agregar</button>
+          </div>
+          <div class="schedule-list" id="scheduleList" role="list" aria-label="Lista de clases del día">
+            <!-- populated by JS -->
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-card__header">
+            <h2 class="dash-card__title">Estado Actual de Sala</h2>
+          </div>
+          <div class="mini-room" id="miniRoom" aria-label="Vista previa de sala" role="img"></div>
+          <div class="mini-room-legend" aria-label="Leyenda del mapa">
+            <span class="legend-item"><span class="legend-dot legend-dot--available" aria-hidden="true"></span>Disponible</span>
+            <span class="legend-item"><span class="legend-dot legend-dot--occupied" aria-hidden="true"></span>Ocupada</span>
+            <span class="legend-item"><span class="legend-dot legend-dot--blocked" aria-hidden="true"></span>Bloqueada</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity feed -->
+      <div class="dash-card" style="margin-top:1.5rem;">
+        <div class="dash-card__header">
+          <h2 class="dash-card__title">Actividad Reciente</h2>
+        </div>
+        <div class="activity-feed" id="activityFeed" role="log" aria-live="polite" aria-label="Actividad reciente"></div>
+      </div>
+    </section>
+
+    <!-- ── MODULE: ROOM MAP ──────────────────────────────── -->
+    <section class="module hidden" id="module-roommap" data-module="roommap" aria-labelledby="roommap-title">
+      <div class="page-header">
+        <div>
+          <p class="page-overline">Módulo A</p>
+          <h1 class="page-title" id="roommap-title">Sala de Bikes</h1>
+        </div>
+        <div class="page-header-actions">
+          <div class="room-stats" aria-label="Estadísticas de sala" role="status">
+            <span class="room-stat" id="rmAvailable"><span class="room-stat__dot room-stat__dot--available" aria-hidden="true"></span><span id="rmAvailableCount">–</span> disponibles</span>
+            <span class="room-stat" id="rmOccupied"><span class="room-stat__dot room-stat__dot--occupied" aria-hidden="true"></span><span id="rmOccupiedCount">–</span> ocupadas</span>
+            <span class="room-stat" id="rmBlocked"><span class="room-stat__dot room-stat__dot--blocked" aria-hidden="true"></span><span id="rmBlockedCount">–</span> bloqueadas</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Room filter bar -->
+      <div class="room-filter-bar" role="toolbar" aria-label="Filtros de sala">
+        <button class="filter-btn active" data-filter="all" id="filterAll" aria-pressed="true">Todas</button>
+        <button class="filter-btn" data-filter="available" id="filterAvailable" aria-pressed="false">Disponibles</button>
+        <button class="filter-btn" data-filter="occupied" id="filterOccupied" aria-pressed="false">Ocupadas</button>
+        <button class="filter-btn" data-filter="blocked" id="filterBlocked" aria-pressed="false">Bloqueadas</button>
+        <button class="btn btn--outline btn--sm" id="resetRoomBtn" style="margin-left:auto" aria-label="Resetear sala">Reset Sala</button>
+      </div>
+
+      <!-- Stage indicator -->
+      <div class="stage-bar" aria-label="Frente de la sala">
+        <span>FRENTE / INSTRUCTOR</span>
+      </div>
+
+      <!-- Bike Grid -->
+      <div class="room-grid" id="roomGrid" role="grid" aria-label="Mapa interactivo de bicicletas">
+        <!-- populated by JS -->
+      </div>
+
+      <!-- Legend -->
+      <div class="room-legend" aria-label="Leyenda del mapa">
+        <span class="legend-item"><span class="legend-dot legend-dot--available" aria-hidden="true"></span>Disponible</span>
+        <span class="legend-item"><span class="legend-dot legend-dot--occupied" aria-hidden="true"></span>Ocupada</span>
+        <span class="legend-item"><span class="legend-dot legend-dot--blocked" aria-hidden="true"></span>Bloqueada</span>
+        <span class="legend-item"><span class="legend-dot legend-dot--selected" aria-hidden="true"></span>Seleccionada</span>
+      </div>
+    </section>
+
+    <!-- ── MODULE: CHECK-IN ──────────────────────────────── -->
+    <section class="module hidden" id="module-checkin" data-module="checkin" aria-labelledby="checkin-title">
+      <div class="page-header">
+        <div>
+          <p class="page-overline">Módulo B</p>
+          <h1 class="page-title" id="checkin-title">Check-in de Clase</h1>
+        </div>
+        <div class="page-header-actions">
+          <div class="checkin-summary" role="status" aria-label="Resumen de asistencia">
+            <span class="checkin-stat checkin-stat--attended" id="ciAttended">0 Asistieron</span>
+            <span class="checkin-stat checkin-stat--noshow" id="ciNoshow">0 No-show</span>
+            <span class="checkin-stat" id="ciPending">0 Pendientes</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Class selector -->
+      <div class="class-selector" role="group" aria-label="Selección de clase">
+        <label class="form-label" for="classSelect">Clase activa:</label>
+        <select class="form-select" id="classSelect" aria-label="Seleccionar clase">
+          <option value="0700">07:00 AM — Spinning Intenso · Instructor: Karla</option>
+          <option value="0900">09:00 AM — Endurance Ride · Instructor: Marco</option>
+          <option value="1100">11:00 AM — Beats & Burn · Instructor: Sofía</option>
+          <option value="1800" selected>06:00 PM — Power Hour · Instructor: Diego</option>
+          <option value="2000">08:00 PM — Night Ride · Instructor: Ana</option>
+        </select>
+        <button class="btn btn--primary" id="loadClassBtn" aria-label="Cargar clase">Cargar Clase</button>
+      </div>
+
+      <!-- Check-in List -->
+      <div class="checkin-list" id="checkinList" role="list" aria-label="Lista de asistencia" aria-live="polite">
+        <!-- populated by JS -->
+      </div>
+
+      <!-- Bulk actions -->
+      <div class="checkin-bulk" role="toolbar" aria-label="Acciones masivas">
+        <button class="btn btn--success" id="markAllAttendedBtn" aria-label="Marcar todos como asistidos">✓ Todos Asistieron</button>
+        <button class="btn btn--danger" id="markAllNoshowBtn" aria-label="Marcar todos como no-show">✗ Todos No-Show</button>
+        <button class="btn btn--outline" id="exportCheckinBtn" aria-label="Exportar reporte">↓ Exportar</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════
+       BIKE BOOKING MODAL
+  ═══════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal" id="bikeModal">
+      <button class="modal__close" id="modalClose" aria-label="Cerrar modal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal__header">
+        <div class="modal__bike-badge" id="modalBikeBadge" aria-hidden="true">—</div>
+        <div>
+          <p class="modal__overline">BIKE</p>
+          <h2 class="modal__title" id="modalTitle">Reservar Bicicleta</h2>
+        </div>
+      </div>
+      <div class="modal__body">
+        <div class="form-group">
+          <label class="form-label" for="bookingName">Nombre del usuario</label>
+          <input class="form-input" type="text" id="bookingName" placeholder="Ej. María García" autocomplete="name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="bookingCredits">Créditos disponibles</label>
+          <input class="form-input" type="number" id="bookingCredits" placeholder="10" min="0" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="bookingClass">Clase</label>
+          <select class="form-select" id="bookingClass">
+            <option>07:00 AM — Spinning Intenso</option>
+            <option>09:00 AM — Endurance Ride</option>
+            <option>11:00 AM — Beats & Burn</option>
+            <option selected>06:00 PM — Power Hour</option>
+            <option>08:00 PM — Night Ride</option>
+          </select>
+        </div>
+        <div class="modal__actions">
+          <button class="btn btn--primary btn--lg" id="confirmBookingBtn" aria-label="Confirmar reserva">Confirmar Reserva</button>
+          <button class="btn btn--ghost btn--lg" id="blockBikeBtn" aria-label="Bloquear bicicleta">Bloquear Bike</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div class="toast-container" id="toastContainer" role="region" aria-live="assertive" aria-label="Notificaciones"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/room-map.js" defer></script>
+  <script src="js/checkin.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
+  <script src="js/app.js" defer></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
