@@ -634,9 +634,11 @@
       if (!auth) return; // requireAuth already redirected to login.html
 
       // Hydrate sidebar with real user data
-      document.addEventListener('DOMContentLoaded', () => {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => XBM.Auth.hydrateSidebar(auth.profile));
+      } else {
         XBM.Auth.hydrateSidebar(auth.profile);
-      });
+      }
     })();
 
     if ('serviceWorker' in navigator) {
