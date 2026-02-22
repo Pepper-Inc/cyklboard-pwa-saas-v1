@@ -25,6 +25,7 @@ XBM.Users = (function () {
             const { data, error } = await db
                 .from('profiles')
                 .select('*')
+                .in('role', ['admin', 'instructor'])
                 .order('role')
                 .order('full_name');
             if (error) throw error;

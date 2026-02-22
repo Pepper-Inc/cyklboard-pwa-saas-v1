@@ -86,17 +86,28 @@
           <span class="sidenav__label">Check-in</span>
         </button>
       </li>
-      <li class="sidenav__item" role="listitem" id="nav-users-item">
-        <button class="sidenav__link" id="nav-users" data-module="users" aria-label="Gestión de Usuarios">
+      <li class="sidenav__item" role="listitem" id="nav-staff-item">
+        <button class="sidenav__link" id="nav-staff" data-module="staff" aria-label="Gestión de Personal">
+          <span class="sidenav__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="8.5" cy="7" r="4"/>
+              <line x1="20" y1="8" x2="20" y2="14"/>
+              <line x1="23" y1="11" x2="17" y2="11"/>
+            </svg>
+          </span>
+          <span class="sidenav__label">Personal</span>
+        </button>
+      </li>
+      <li class="sidenav__item" role="listitem" id="nav-clients-item">
+        <button class="sidenav__link" id="nav-clients" data-module="clients" aria-label="Gestión de Clientes">
           <span class="sidenav__icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
               <circle cx="9" cy="7" r="4"/>
-              <line x1="19" y1="8" x2="19" y2="14"/>
-              <line x1="22" y1="11" x2="16" y2="11"/>
             </svg>
           </span>
-          <span class="sidenav__label">Usuarios</span>
+          <span class="sidenav__label">Clientes</span>
         </button>
       </li>
     </ul>
@@ -367,12 +378,12 @@
       </div>
     </section>
 
-    <!-- ── MODULE: USERS ────────────────────────────────────── -->
-    <section class="module hidden" id="module-users" data-module="users" aria-labelledby="users-title">
+    <!-- ── MODULE: STAFF (Admins & Instructors) ────────────────────────────────────── -->
+    <section class="module hidden" id="module-staff" data-module="staff" aria-labelledby="staff-title">
       <div class="page-header">
         <div>
           <p class="page-overline">Módulo D</p>
-          <h1 class="page-title" id="users-title">Gestión de Usuarios</h1>
+          <h1 class="page-title" id="staff-title">Gestión de Personal</h1>
         </div>
         <div class="page-header-actions">
           <button class="btn btn--primary" id="openInviteBtn" aria-label="Invitar nuevo instructor">
@@ -411,8 +422,26 @@
       <div class="users-toolbar">
         <span class="users-toolbar__title">Directorio de Personal</span>
       </div>
-      <div class="users-grid" id="usersGrid" role="list" aria-label="Lista de usuarios">
+      <div class="users-grid" id="usersGrid" role="list" aria-label="Lista de personal">
         <!-- populated by JS -->
+      </div>
+    </section>
+
+    <!-- ── MODULE: CLIENTS ────────────────────────────────────── -->
+    <section class="module hidden" id="module-clients" data-module="clients" aria-labelledby="clients-title">
+      <div class="page-header">
+        <div>
+          <p class="page-overline">Módulo E</p>
+          <h1 class="page-title" id="clients-title">Directorio de Clientes</h1>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn--primary" id="openClientModalBtn" aria-label="Nuevo Cliente">
+            + Nuevo Cliente
+          </button>
+        </div>
+      </div>
+      <div style="padding: 2rem; text-align: center; color: var(--text-muted); border: 1px dashed rgba(255,255,255,0.1); border-radius: var(--radius-md);">
+        Vista en construcción para el manejo de clientes
       </div>
     </section>
 
