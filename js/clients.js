@@ -9,6 +9,7 @@ XBM.Clients = (function () {
     'use strict';
 
     let clients = [];
+    let filteredClients = [];
     let editingId = null;
 
     /* ── LOAD ALL CLIENTS ───────────────────────────────────── */
@@ -22,6 +23,18 @@ XBM.Clients = (function () {
                 .order('full_name');
             if (error) throw error;
             clients = data || [];
+            filteredClients = [...clients];
+
+            // Re-apply any existing search filter
+            const searchInput = document.getElementById('clientSearch');
+            if (searchInput && searchInput.value) {
+                const query = searchInput.value.toLowerCase();
+                filteredClients = clients.filter(c =>
+                    (c.full_name && c.full_name.toLowerCase().includes(query)) ||
+                    (c.phone && c.phone.includes(query))
+                );
+            }
+
             return clients;
         } catch (err) {
             console.warn('[Clients] Load error:', err.message);
@@ -56,7 +69,7 @@ XBM.Clients = (function () {
         const current = client.credits_remaining || 0;
         const newVal = current + amt;
         if (newVal < 0) return;
-        
+
         const btnId = amt > 0 ? `addcred-${client.id}` : `subcred-${client.id}`;
         const btn = document.getElementById(btnId);
         if (btn) btn.disabled = true;
@@ -66,10 +79,10 @@ XBM.Clients = (function () {
 
         if (ok) {
             client.credits_remaining = newVal;
-            XBM.toast({ 
-                title: 'Créditos actualizados', 
-                msg: `${client.full_name} ahora tiene ${newVal} créd.`, 
-                type: 'success' 
+            XBM.toast({
+                title: 'Créditos actualizados',
+                msg: `${client.full_name} ahora tiene ${newVal} créd.`,
+                type: 'success'
             });
             render(); // refresh UI
         }
@@ -80,7 +93,7 @@ XBM.Clients = (function () {
         const container = document.getElementById('clientsGrid');
         if (!container) return;
 
-        if (clients.length === 0) {
+        if (filteredClients.length === 0) {
             container.innerHTML = `
         <div class="clients-empty">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -89,21 +102,22 @@ XBM.Clients = (function () {
             <line x1="19" y1="8" x2="19" y2="14"/>
             <line x1="22" y1="11" x2="16" y2="11"/>
           </svg>
-          <p>Sin clientes registrados</p>
+          <p>Sin clientes registrados o no hay coincidencias</p>
           <button class="btn btn--primary" id="emptyInviteClientBtn">+ Nuevo Cliente</button>
         </div>`;
+            document.getElementById('emptyInviteClientBtn')?.addEventListener('click', openInviteModal);
             return;
         }
 
         container.innerHTML = '';
-        clients.forEach((c) => {
+        filteredClients.forEach((c) => {
             container.appendChild(buildClientCard(c));
         });
 
         // Add event listeners back
-        clients.forEach(c => {
+        filteredClients.forEach(c => {
             const card = document.getElementById(`ccard-${c.id}`);
-            if(!card) return;
+            if (!card) return;
             card.querySelector(`#addcred-${c.id}`)?.addEventListener('click', () => adjustCredits(c, 1));
             card.querySelector(`#subcred-${c.id}`)?.addEventListener('click', () => adjustCredits(c, -1));
         });
@@ -162,14 +176,100 @@ XBM.Clients = (function () {
         render();
     }
 
+    /* ══════════════════════════════════════════════════════════
+       INVITE MODAL (NEW CLIENT)
+    ══════════════════════════════════════════════════════════ */
+    function openInviteModal() {
+        document.getElementById('inviteClientEmail').value = '';
+        document.getElementById('inviteClientName').value = '';
+        document.getElementById('inviteClientPhone').value = '';
+        document.getElementById('inviteClientCredits').value = '0';
+        document.getElementById('inviteClientStatus').textContent = '';
+        document.getElementById('inviteClientStatus').className = 'invite-status';
+
+        const overlay = document.getElementById('inviteClientOverlay');
+        overlay.classList.add('is-open');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.getElementById('inviteClientEmail').focus();
+    }
+
+    function closeInviteModal() {
+        document.getElementById('inviteClientOverlay').classList.remove('is-open');
+        document.getElementById('inviteClientOverlay').setAttribute('aria-hidden', 'true');
+    }
+
+    async function submitInvite() {
+        const email = document.getElementById('inviteClientEmail').value.trim();
+        const fullName = document.getElementById('inviteClientName').value.trim();
+        const phone = document.getElementById('inviteClientPhone').value.trim() || null;
+        const credits = parseInt(document.getElementById('inviteClientCredits').value, 10) || 0;
+        const status = document.getElementById('inviteClientStatus');
+
+        if (!email || !fullName) {
+            XBM.toast({ title: 'Campos requeridos', msg: 'Email y nombre son obligatorios.', type: 'danger' });
+            return;
+        }
+
+        const btn = document.getElementById('sendInviteClientBtn');
+        btn.disabled = true;
+        btn.textContent = 'Enviando invitación...';
+        status.textContent = '';
+
+        try {
+            // Using signInWithOtp will create the user if it doesn't exist
+            const { error } = await db.auth.signInWithOtp({
+                email,
+                options: {
+                    shouldCreateUser: true,
+                    emailRedirectTo: window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/') + 'login.html',
+                    data: { full_name: fullName, role: 'client', phone: phone, credits_remaining: credits },
+                },
+            });
+            if (error) throw error;
+
+            status.className = 'invite-status invite-status--ok';
+            status.textContent = `✓ Cliente registrado. Enlace enviado a ${email}`;
+            XBM.toast({ title: 'Cliente Creado', msg: fullName, type: 'success' });
+
+            setTimeout(() => { closeInviteModal(); }, 3000);
+
+        } catch (err) {
+            console.warn('[Clients] Invite error:', err.message);
+            status.textContent = err.message;
+            status.style.color = 'var(--color-danger)';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Crear y Enviar Acceso';
+        }
+    }
+
     /* ── INIT ────────────────────────────────────────────────── */
     async function init() {
         await loadAndRender();
         // Solo suscribir 1 vez!
-        if(!XBM.Clients._subscribed) {
+        if (!XBM.Clients._subscribed) {
             subscribeToClients();
             XBM.Clients._subscribed = true;
         }
+
+        // Search
+        document.getElementById('clientSearch')?.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            filteredClients = clients.filter(c =>
+                (c.full_name && c.full_name.toLowerCase().includes(query)) ||
+                (c.phone && c.phone.includes(query))
+            );
+            render();
+        });
+
+        // Modals
+        document.getElementById('openClientModalBtn')?.addEventListener('click', openInviteModal);
+        document.getElementById('inviteClientClose')?.addEventListener('click', closeInviteModal);
+        document.getElementById('sendInviteClientBtn')?.addEventListener('click', submitInvite);
+
+        document.getElementById('inviteClientOverlay')?.addEventListener('click', e => {
+            if (e.target === e.currentTarget) closeInviteModal();
+        });
     }
 
     return { init };

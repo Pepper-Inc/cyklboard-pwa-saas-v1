@@ -441,8 +441,14 @@
           </button>
         </div>
       </div>
-      <div style="padding: 2rem; text-align: center; color: var(--text-muted); border: 1px dashed rgba(255,255,255,0.1); border-radius: var(--radius-md);">
-        Vista en construcción para el manejo de clientes
+      <div class="clients-toolbar">
+        <span class="clients-toolbar__title">Listado de Clientes</span>
+        <div class="clients-filter">
+          <input class="form-input" type="text" id="clientSearch" placeholder="Buscar por nombre..." style="min-width: 240px; border-radius: 999px; font-size: 0.875rem;" aria-label="Buscar clientes" />
+        </div>
+      </div>
+      <div class="clients-grid" id="clientsGrid" role="list" aria-label="Lista de clientes">
+        <!-- populated by JS -->
       </div>
     </section>
 
@@ -620,6 +626,56 @@
       </div>
     </div>
   </div>
+
+  <!-- INVITE CLIENT MODAL -->
+  <div class="modal-overlay" id="inviteClientOverlay" role="dialog" aria-modal="true" aria-labelledby="inviteClientTitle" aria-hidden="true">
+    <div class="modal users-modal">
+      <button class="modal__close" id="inviteClientClose" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal__header">
+        <div class="modal__bike-badge" style="background:rgba(232,255,0,0.08);border-color:rgba(232,255,0,0.2);" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#E8FF00" stroke-width="2" style="width:18px;height:18px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        </div>
+        <div>
+          <p class="modal__overline">NUEVO PERFIL</p>
+          <h2 class="modal__title" id="inviteClientTitle">Inscribir Cliente</h2>
+        </div>
+      </div>
+      <div class="modal__body">
+        <div class="form-group">
+          <label class="form-label" for="inviteClientEmail">Correo electrónico del cliente</label>
+          <input class="form-input" type="email" id="inviteClientEmail" placeholder="cliente@correo.com" autocomplete="email" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="inviteClientName">Nombre completo</label>
+            <input class="form-input" type="text" id="inviteClientName" placeholder="Juan Pérez" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inviteClientPhone">Teléfono / WhatsApp</label>
+            <input class="form-input" type="tel" id="inviteClientPhone" placeholder="+52 ..." />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="inviteClientCredits">Créditos iniciales</label>
+            <input class="form-input" type="number" id="inviteClientCredits" value="0" min="0" placeholder="0" />
+          </div>
+          <div class="form-group"></div>
+        </div>
+        <p style="font-size:0.8125rem;color:var(--text-muted);line-height:1.5;">
+          El cliente recibirá un enlace mágico a su correo para acceder directamente a la plataforma y ver sus créditos.
+        </p>
+        <span class="invite-status" id="inviteClientStatus"></span>
+        <div class="modal__actions">
+          <button class="btn btn--primary btn--lg" id="sendInviteClientBtn">Crear y Enviar Acceso</button>
+          <button class="btn btn--ghost btn--lg" onclick="document.getElementById('inviteClientOverlay').classList.remove('is-open')">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="toast-container" id="toastContainer" role="region" aria-live="assertive" aria-label="Notificaciones"></div>
 
   <!-- QR Code libs -->
