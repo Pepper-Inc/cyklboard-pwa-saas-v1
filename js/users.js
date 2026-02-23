@@ -132,7 +132,7 @@ XBM.Users = (function () {
         <div class="ucard__avatar" aria-hidden="true">${initials}</div>
         <div class="ucard__meta">
           <h3 class="ucard__name">${profile.full_name || '—'}</h3>
-          <p class="ucard__email">${profile.id.slice(0, 8)}…</p>
+          <p class="ucard__email">${profile.email || profile.id.slice(0, 8)}</p>
         </div>
         <span class="ucard__role-badge ucard__role-badge--${roleBadge}">${roleLabel}</span>
       </div>
@@ -217,6 +217,7 @@ XBM.Users = (function () {
         editingId = profile.id;
 
         document.getElementById('editUserName').value = profile.full_name || '';
+        document.getElementById('editUserEmail').value = profile.email || '';
         document.getElementById('editUserPhone').value = profile.phone || '';
         document.getElementById('editUserRole').value = profile.role || 'instructor';
         document.getElementById('editUserCredits').value = profile.credits_remaining ?? 0;
@@ -240,6 +241,7 @@ XBM.Users = (function () {
 
         const changes = {
             full_name: document.getElementById('editUserName').value.trim(),
+            email: document.getElementById('editUserEmail').value.trim() || null,
             phone: document.getElementById('editUserPhone').value.trim() || null,
             role: document.getElementById('editUserRole').value,
             credits_remaining: parseInt(document.getElementById('editUserCredits').value, 10) || 0,
