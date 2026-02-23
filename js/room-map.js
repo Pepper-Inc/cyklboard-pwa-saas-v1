@@ -234,7 +234,11 @@ XBM.RoomMap = (function () {
         document.getElementById('clientSuggestions').classList.remove('is-open');
         if (typeof XBM.Clients?.openInviteModal === 'function') {
             XBM.Clients.openInviteModal();
-            document.getElementById('inviteClientName').value = name;
+            // Capitalize each word (Title Case)
+            const capitalized = name.split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ');
+            document.getElementById('inviteClientName').value = capitalized;
         }
     }
 
