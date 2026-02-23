@@ -470,28 +470,40 @@
         </div>
       </div>
       <div class="modal__body">
-        <div class="form-group" style="position: relative;">
-          <label class="form-label" for="bookingName">Nombre del usuario</label>
-          <input class="form-input" type="text" id="bookingName" placeholder="Buscar cliente..." autocomplete="off" />
-          <div class="client-suggestions" id="clientSuggestions"></div>
+        <div id="bikeModalStatus" style="margin-bottom: var(--space-4); display: none;">
+          <p style="font-size: var(--font-size-sm); color: var(--text-low);">
+            Estado actual: <span id="bikeStatusText" style="font-weight: 700; color: var(--text-high);"></span>
+          </p>
         </div>
-        <div class="form-group">
-          <label class="form-label" for="bookingCredits">Créditos disponibles</label>
-          <input class="form-input" type="number" id="bookingCredits" placeholder="10" min="0" />
+
+        <div id="bookingFormFields">
+          <div class="form-group" style="position: relative;">
+            <label class="form-label" for="bookingName">Nombre del usuario</label>
+            <input class="form-input" type="text" id="bookingName" placeholder="Buscar cliente..." autocomplete="off" />
+            <div class="client-suggestions" id="clientSuggestions"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bookingCredits">Créditos disponibles</label>
+            <input class="form-input" type="number" id="bookingCredits" placeholder="10" min="0" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bookingClass">Clase</label>
+            <select class="form-select" id="bookingClass">
+              <option>07:00 AM — Spinning Intenso</option>
+              <option>09:00 AM — Endurance Ride</option>
+              <option>11:00 AM — Beats & Burn</option>
+              <option selected>06:00 PM — Power Hour</option>
+              <option>08:00 PM — Night Ride</option>
+            </select>
+          </div>
         </div>
-        <div class="form-group">
-          <label class="form-label" for="bookingClass">Clase</label>
-          <select class="form-select" id="bookingClass">
-            <option>07:00 AM — Spinning Intenso</option>
-            <option>09:00 AM — Endurance Ride</option>
-            <option>11:00 AM — Beats & Burn</option>
-            <option selected>06:00 PM — Power Hour</option>
-            <option>08:00 PM — Night Ride</option>
-          </select>
-        </div>
+
         <div class="modal__actions">
           <button class="btn btn--primary btn--lg" id="confirmBookingBtn" aria-label="Confirmar reserva">Confirmar Reserva</button>
           <button class="btn btn--ghost btn--lg" id="blockBikeBtn" aria-label="Bloquear bicicleta">Bloquear Bike</button>
+          
+          <button class="btn btn--danger btn--lg" id="deleteReservationBtn" style="display: none;" aria-label="Eliminar reserva">Eliminar Reserva</button>
+          <button class="btn btn--success btn--lg" id="unblockBikeBtn" style="display: none;" aria-label="Desbloquear bike">Desbloquear Bike</button>
         </div>
       </div>
     </div>

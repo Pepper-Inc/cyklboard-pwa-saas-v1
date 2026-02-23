@@ -155,20 +155,6 @@ XBM.RoomMap = (function () {
         return { available: 'Disponible', occupied: 'Ocupada', blocked: 'Bloqueada' }[status] || status;
     }
 
-    /* ── HANDLE BIKE CLICK ────────────────────────────────────── */
-    function handleBikeClick(e, bikeId) {
-        const bike = XBM.bikeStates.find(b => b.id === bikeId);
-        if (!bike) return;
-        XBM.addRipple(e.currentTarget, e);
-
-        if (bike.status === 'available') {
-            openBookingModal(bikeId);
-        } else if (bike.status === 'occupied') {
-            XBM.toast({ title: `Bike #${bikeId} Ocupada`, msg: `Asignada a: ${bike.user}`, type: 'info' });
-        } else if (bike.status === 'blocked') {
-            XBM.toast({ title: `Bike #${bikeId} Bloqueada`, msg: 'Esta bike está fuera de servicio.', type: 'danger' });
-        }
-    }
 
     /* ── CLIENT SEARCH LOGIC ──────────────────────────────────── */
     let allClients = [];
@@ -253,8 +239,19 @@ XBM.RoomMap = (function () {
     }
 
     /* ── BOOKING MODAL ────────────────────────────────────────── */
-    function openBookingModal(bikeId) {
+    function handleBikeClick(e, bikeId) {
+        const bike = XBM.bikeStates.find(b => b.id === bikeId);
+        if (!bike) return;
+        XBM.addRipple(e.currentTarget, e);
+        openBikeModal(bikeId);
+    }
+
+    /* ── BIKE MODAL ───────────────────────────────────────────── */
+    function openBikeModal(bikeId) {
         selectedBikeId = bikeId;
+        const bike = XBM.bikeStates.find(b => b.id === bikeId);
+        if (!bike) return;
+
         fetchClients(); // Load fresh list
 
         document.querySelectorAll('.bike-card').forEach(c => c.classList.remove('bike-card--selected'));
@@ -263,15 +260,52 @@ XBM.RoomMap = (function () {
 
         document.getElementById('modalBikeBadge').textContent = bikeId;
         document.getElementById('modalTitle').textContent = `Bike #${bikeId}`;
-        document.getElementById('bookingName').value = '';
-        document.getElementById('bookingCredits').value = '';
+
+        // UI Elements
+        const statusContainer = document.getElementById('bikeModalStatus');
+        const statusText = document.getElementById('bikeStatusText');
+        const bookingForm = document.getElementById('bookingFormFields');
+        const btnConfirm = document.getElementById('confirmBookingBtn');
+        const btnBlock = document.getElementById('blockBikeBtn');
+        const btnDelete = document.getElementById('deleteReservationBtn');
+        const btnUnblock = document.getElementById('unblockBikeBtn');
+
+        // Hide all management sections first
+        statusContainer.style.display = 'none';
+        bookingForm.style.display = 'none';
+        btnConfirm.style.display = 'none';
+        btnBlock.style.display = 'none';
+        btnDelete.style.display = 'none';
+        btnUnblock.style.display = 'none';
+
+        if (bike.status === 'available') {
+            bookingForm.style.display = 'block';
+            btnConfirm.style.display = 'flex';
+            btnBlock.style.display = 'flex';
+            document.getElementById('bookingName').value = '';
+            document.getElementById('bookingCredits').value = '';
+        } else if (bike.status === 'occupied') {
+            statusContainer.style.display = 'block';
+            statusText.textContent = `OCUPADA POR ${bike.user || 'Cliente'}`;
+            statusText.style.color = 'var(--text-high)';
+            btnDelete.style.display = 'flex';
+        } else if (bike.status === 'blocked') {
+            statusContainer.style.display = 'block';
+            statusText.textContent = 'BLOQUEADA / MANTENIMIENTO';
+            statusText.style.color = 'var(--color-danger)';
+            btnUnblock.style.display = 'flex';
+        }
+
         document.getElementById('clientSuggestions').classList.remove('is-open');
         document.getElementById('clientSuggestions').innerHTML = '';
 
         const overlay = document.getElementById('modalOverlay');
         overlay.classList.add('is-open');
         overlay.setAttribute('aria-hidden', 'false');
-        document.getElementById('bookingName').focus();
+
+        if (bike.status === 'available') {
+            setTimeout(() => document.getElementById('bookingName').focus(), 100);
+        }
     }
 
     function closeModal() {
@@ -394,6 +428,70 @@ XBM.RoomMap = (function () {
         if (typeof XBM.Dashboard?.updateKPIs === 'function') XBM.Dashboard.updateKPIs();
     }
 
+    /* ── DELETE RESERVATION ───────────────────────────────────── */
+    function deleteReservation() {
+        if (!selectedBikeId) return;
+        const bike = XBM.bikeStates.find(b => b.id === selectedBikeId);
+        if (!bike || bike.status !== 'occupied') return;
+
+        if (!confirm(`¿Eliminar la reserva de ${bike.user}?`)) return;
+
+        const userName = bike.user;
+        bike.status = 'available';
+        bike.user = null;
+        bike.credits = null;
+
+        const card = document.getElementById(`bike-${selectedBikeId}`);
+        if (card) {
+            card.className = 'bike-card bike-card--available';
+            card.setAttribute('aria-label', `Bike ${selectedBikeId} — Disponible`);
+            card.innerHTML = `<span class="bike-card__number">${selectedBikeId}</span><span class="bike-card__icon">${BIKE_ICON_SVG}</span><span class="bike-card__user"></span>`;
+        }
+
+        const storedId = selectedBikeId;
+        closeModal();
+
+        // Persist to Supabase
+        saveBikeToDB(bike);
+
+        XBM.toast({ title: 'Reserva Eliminada', msg: `Bike #${storedId} ahora está disponible.`, type: 'info' });
+        XBM.addActivity({ type: 'info', text: `Reserva de <strong>${userName}</strong> eliminada (Bike #${storedId})` });
+
+        updateStats();
+        updateMiniRoom();
+        if (typeof XBM.Dashboard?.updateKPIs === 'function') XBM.Dashboard.updateKPIs();
+    }
+
+    /* ── UNBLOCK BIKE ─────────────────────────────────────────── */
+    function unblockBike() {
+        if (!selectedBikeId) return;
+        const bike = XBM.bikeStates.find(b => b.id === selectedBikeId);
+        if (!bike || bike.status !== 'blocked') return;
+
+        bike.status = 'available';
+        bike.user = null;
+
+        const card = document.getElementById(`bike-${selectedBikeId}`);
+        if (card) {
+            card.className = 'bike-card bike-card--available';
+            card.setAttribute('aria-label', `Bike ${selectedBikeId} — Disponible`);
+            card.innerHTML = `<span class="bike-card__number">${selectedBikeId}</span><span class="bike-card__icon">${BIKE_ICON_SVG}</span><span class="bike-card__user"></span>`;
+        }
+
+        const storedId = selectedBikeId;
+        closeModal();
+
+        // Persist to Supabase
+        saveBikeToDB(bike);
+
+        XBM.toast({ title: 'Bike Desbloqueada', msg: `Bike #${storedId} lista para reservarse.`, type: 'success' });
+        XBM.addActivity({ type: 'success', text: `<strong>Bike #${storedId}</strong> desbloqueada y disponible` });
+
+        updateStats();
+        updateMiniRoom();
+        if (typeof XBM.Dashboard?.updateKPIs === 'function') XBM.Dashboard.updateKPIs();
+    }
+
     /* ── FILTER ───────────────────────────────────────────────── */
     function applyFilter(filter) {
         currentFilter = filter;
@@ -449,6 +547,8 @@ XBM.RoomMap = (function () {
         });
         document.getElementById('confirmBookingBtn')?.addEventListener('click', confirmBooking);
         document.getElementById('blockBikeBtn')?.addEventListener('click', blockBike);
+        document.getElementById('deleteReservationBtn')?.addEventListener('click', deleteReservation);
+        document.getElementById('unblockBikeBtn')?.addEventListener('click', unblockBike);
 
         // Client Search in modal
         const bookingNameInput = document.getElementById('bookingName');
