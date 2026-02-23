@@ -162,3 +162,26 @@ values
   ('Night Ride', 'Ana',
     (date_trunc('day', now() AT TIME ZONE 'America/Caracas') + interval '20 hours') AT TIME ZONE 'America/Caracas',
     'upcoming', 20);
+
+-- ── 6. ADMIN UTILITIES ─────────────────────────────────────────
+-- Function to allow admins to permanently delete users
+CREATE OR REPLACE FUNCTION public.delete_user_completely(target_user_id UUID)
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, auth
+AS $$
+DECLARE
+    requester_role TEXT;
+BEGIN
+    SELECT role INTO requester_role FROM public.profiles WHERE id = auth.uid();
+    IF requester_role != 'admin' THEN
+        RAISE EXCEPTION 'Solo administradores pueden eliminar usuarios.';
+    END IF;
+    IF target_user_id = auth.uid() THEN
+        RAISE EXCEPTION 'No puedes eliminar tu propia cuenta.';
+    END IF;
+    DELETE FROM auth.users WHERE id = target_user_id;
+END;
+$$;
+GRANT EXECUTE ON FUNCTION public.delete_user_completely(UUID) TO authenticated;

@@ -167,12 +167,19 @@ XBM.Users = (function () {
                     ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg> Desactivar`
                     : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Activar`}
         </button>
+        <button class="btn btn--danger btn--sm ucard__delete-btn"
+          id="delete-${profile.id}"
+          aria-label="Eliminar ${profile.full_name}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          Eliminar
+        </button>
       </div>` : ''}
     `;
 
         if (isAdmin) {
             card.querySelector(`#edit-${profile.id}`)?.addEventListener('click', () => openEditModal(profile));
             card.querySelector(`#toggle-${profile.id}`)?.addEventListener('click', () => toggleActive(profile));
+            card.querySelector(`#delete-${profile.id}`)?.addEventListener('click', () => deleteUser(profile));
         }
 
         return card;
@@ -208,6 +215,46 @@ XBM.Users = (function () {
         XBM.toast({ title: `Usuario ${newVal ? 'activado' : 'desactivado'}`, msg: profile.full_name, type: newVal ? 'success' : 'danger' });
         XBM.addActivity?.({ type: newVal ? 'success' : 'danger', text: `<strong>${profile.full_name}</strong> — cuenta ${newVal ? 'activada' : 'desactivada'}` });
         updateUserStats();
+    }
+
+    /* ── PERMANENT DELETE ────────────────────────────────────── */
+    async function deleteUser(profile) {
+        if (!confirm(`¿ELIMINAR DEFINITIVAMENTE a ${profile.full_name}?\nEsta acción no se puede deshacer y borrará todos los datos del usuario.`)) return;
+
+        // Final confirmation for safety
+        const doubleCheck = prompt(`Escribe el nombre del usuario para confirmar: ${profile.full_name}`);
+        if (doubleCheck !== profile.full_name) {
+            XBM.toast({ title: 'Cancelado', msg: 'El nombre no coincide.', type: 'info' });
+            return;
+        }
+
+        const btn = document.getElementById(`delete-${profile.id}`);
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Borrando...';
+        }
+
+        try {
+            // Call the database function (RPC)
+            const { error } = await db.rpc('delete_user_completely', {
+                target_user_id: profile.id
+            });
+
+            if (error) throw error;
+
+            XBM.toast({ title: 'Usuario eliminado', msg: 'Se ha borrado de la base de datos.', type: 'danger' });
+            XBM.addActivity?.({ type: 'danger', text: `<strong>${profile.full_name}</strong> — usuario ELIMINADO permanentemente` });
+
+            await loadAndRender();
+
+        } catch (err) {
+            console.warn('[Users] Delete error:', err.message);
+            XBM.toast({ title: 'Error', msg: 'No se pudo eliminar: ' + err.message, type: 'danger' });
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'Eliminar';
+            }
+        }
     }
 
     /* ══════════════════════════════════════════════════════════
