@@ -11,8 +11,9 @@
 create table if not exists public.profiles (
   id          uuid primary key references auth.users(id) on delete cascade,
   full_name   text not null,
+  email       text,
   role        text not null default 'instructor'
-                check (role in ('admin', 'instructor')),
+                check (role in ('admin', 'instructor', 'client')),
   gym_name    text default 'Xtreme Bike Studio',
   avatar_url  text,
   created_at  timestamptz default now(),
@@ -23,10 +24,11 @@ create table if not exists public.profiles (
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
-  insert into public.profiles (id, full_name, role)
+  insert into public.profiles (id, full_name, email, role)
   values (
     new.id,
     coalesce(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1)),
+    new.email, -- Capture email from auth.users
     coalesce(new.raw_user_meta_data->>'role', 'instructor')
   );
   return new;
