@@ -557,6 +557,72 @@
     color: var(--text-high);
 }
 
+/* Client suggestions dropdown */
+.client-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-neon);
+    border-radius: var(--radius-md);
+    margin-top: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+    box-shadow: var(--glow-neon-sm);
+    display: none;
+}
+
+.client-suggestions.is-open {
+    display: block;
+}
+
+.suggestion-item {
+    padding: var(--space-3) var(--space-4);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background var(--transition-fast);
+}
+
+.suggestion-item:hover {
+    background: var(--bg-surface2);
+}
+
+.suggestion-item__info {
+    display: flex;
+    flex-direction: column;
+}
+
+.suggestion-item__name {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-high);
+}
+
+.suggestion-item__phone {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+}
+
+.suggestion-item__credits {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    background: var(--primary-neon-glow2);
+    color: var(--primary-neon);
+}
+
+.suggestion-item--new {
+    border-top: 1px solid var(--border-color);
+    color: var(--primary-neon);
+    font-weight: 700;
+    justify-content: center;
+}
+
 /* ── MODAL ──────────────────────────────────────────────────── */
 .modal-overlay {
     position: fixed;

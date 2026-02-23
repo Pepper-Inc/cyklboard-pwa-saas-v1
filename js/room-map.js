@@ -170,9 +170,93 @@ XBM.RoomMap = (function () {
         }
     }
 
+    /* ── CLIENT SEARCH LOGIC ──────────────────────────────────── */
+    let allClients = [];
+
+    async function fetchClients() {
+        if (!window.db) return;
+        try {
+            const { data, error } = await db.from('profiles').select('*').eq('role', 'client').order('full_name');
+            if (error) throw error;
+            allClients = data || [];
+        } catch (err) {
+            console.warn('[RoomMap] fetchClients error:', err.message);
+        }
+    }
+
+    function handleNameInput(e) {
+        const query = e.target.value.toLowerCase().trim();
+        const suggestionsBox = document.getElementById('clientSuggestions');
+
+        if (!query) {
+            suggestionsBox.innerHTML = '';
+            suggestionsBox.classList.remove('is-open');
+            return;
+        }
+
+        const filtered = allClients.filter(c =>
+            (c.full_name && c.full_name.toLowerCase().includes(query)) ||
+            (c.phone && c.phone.includes(query))
+        );
+
+        renderSuggestions(filtered, query);
+    }
+
+    function renderSuggestions(filtered, query) {
+        const suggestionsBox = document.getElementById('clientSuggestions');
+        suggestionsBox.innerHTML = '';
+
+        if (filtered.length > 0) {
+            filtered.slice(0, 5).forEach(client => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.innerHTML = `
+                    <div class="suggestion-item__info">
+                        <span class="suggestion-item__name">${client.full_name}</span>
+                        <span class="suggestion-item__phone">${client.phone || 'S/T'}</span>
+                    </div>
+                    <span class="suggestion-item__credits">${client.credits_remaining || 0} créd.</span>
+                `;
+                item.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    selectClient(client);
+                });
+                suggestionsBox.appendChild(item);
+            });
+        }
+
+        // Add "New Client" option
+        const newItem = document.createElement('div');
+        newItem.className = 'suggestion-item suggestion-item--new';
+        newItem.innerHTML = `<span>+ Inscribir "${query}"</span>`;
+        newItem.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            openNewClientModal(query);
+        });
+        suggestionsBox.appendChild(newItem);
+
+        suggestionsBox.classList.add('is-open');
+    }
+
+    function selectClient(client) {
+        document.getElementById('bookingName').value = client.full_name;
+        document.getElementById('bookingCredits').value = client.credits_remaining || 0;
+        document.getElementById('clientSuggestions').classList.remove('is-open');
+    }
+
+    function openNewClientModal(name) {
+        document.getElementById('clientSuggestions').classList.remove('is-open');
+        if (typeof XBM.Clients?.openInviteModal === 'function') {
+            XBM.Clients.openInviteModal();
+            document.getElementById('inviteClientName').value = name;
+        }
+    }
+
     /* ── BOOKING MODAL ────────────────────────────────────────── */
     function openBookingModal(bikeId) {
         selectedBikeId = bikeId;
+        fetchClients(); // Load fresh list
+
         document.querySelectorAll('.bike-card').forEach(c => c.classList.remove('bike-card--selected'));
         const card = document.getElementById(`bike-${bikeId}`);
         if (card) card.classList.add('bike-card--selected');
@@ -181,6 +265,8 @@ XBM.RoomMap = (function () {
         document.getElementById('modalTitle').textContent = `Bike #${bikeId}`;
         document.getElementById('bookingName').value = '';
         document.getElementById('bookingCredits').value = '';
+        document.getElementById('clientSuggestions').classList.remove('is-open');
+        document.getElementById('clientSuggestions').innerHTML = '';
 
         const overlay = document.getElementById('modalOverlay');
         overlay.classList.add('is-open');
@@ -362,6 +448,18 @@ XBM.RoomMap = (function () {
         });
         document.getElementById('confirmBookingBtn')?.addEventListener('click', confirmBooking);
         document.getElementById('blockBikeBtn')?.addEventListener('click', blockBike);
+
+        // Client Search in modal
+        const bookingNameInput = document.getElementById('bookingName');
+        if (bookingNameInput) {
+            bookingNameInput.addEventListener('input', handleNameInput);
+            bookingNameInput.addEventListener('blur', () => {
+                // Delay so mousedown on suggestion item can trigger first
+                setTimeout(() => {
+                    document.getElementById('clientSuggestions')?.classList.remove('is-open');
+                }, 200);
+            });
+        }
 
         // Controls
         document.getElementById('resetRoomBtn')?.addEventListener('click', resetRoom);

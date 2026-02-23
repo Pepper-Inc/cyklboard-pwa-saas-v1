@@ -272,5 +272,5 @@ XBM.Clients = (function () {
         });
     }
 
-    return { init };
+    return { init, openInviteModal };
 })();
