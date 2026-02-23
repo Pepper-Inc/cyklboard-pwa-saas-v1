@@ -217,7 +217,7 @@ XBM.RoomMap = (function () {
                     </div>
                     <span class="suggestion-item__credits">${client.credits_remaining || 0} créd.</span>
                 `;
-                item.addEventListener('mousedown', (e) => {
+                item.addEventListener('pointerdown', (e) => {
                     e.preventDefault();
                     selectClient(client);
                 });
@@ -229,7 +229,7 @@ XBM.RoomMap = (function () {
         const newItem = document.createElement('div');
         newItem.className = 'suggestion-item suggestion-item--new';
         newItem.innerHTML = `<span>+ Inscribir "${query}"</span>`;
-        newItem.addEventListener('mousedown', (e) => {
+        newItem.addEventListener('pointerdown', (e) => {
             e.preventDefault();
             openNewClientModal(query);
         });
@@ -436,6 +436,7 @@ XBM.RoomMap = (function () {
     async function init() {
         // Load real state from Supabase, fall back to local seed data
         await loadBikesFromDB();
+        await fetchClients(); // Pre-load clients for search
         buildGrid();
 
         // Subscribe to live updates from other devices
@@ -453,11 +454,12 @@ XBM.RoomMap = (function () {
         const bookingNameInput = document.getElementById('bookingName');
         if (bookingNameInput) {
             bookingNameInput.addEventListener('input', handleNameInput);
+            bookingNameInput.addEventListener('focus', fetchClients); // Refresh on focus
             bookingNameInput.addEventListener('blur', () => {
-                // Delay so mousedown on suggestion item can trigger first
+                // Delay so selection event can trigger first
                 setTimeout(() => {
                     document.getElementById('clientSuggestions')?.classList.remove('is-open');
-                }, 200);
+                }, 300);
             });
         }
 
