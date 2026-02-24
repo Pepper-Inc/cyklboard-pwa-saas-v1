@@ -424,6 +424,9 @@
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
 
+    /* Mobile Logo (hidden by default) */
+    .mobile-logo { display: none; }
+
     /* ── RESPONSIVE ──────────────────────────────────────────── */
     @media (max-width: 768px) {
       body {
@@ -437,6 +440,16 @@
         padding: 2rem 1.5rem;
         min-height: 100dvh;
         justify-content: center;
+      }
+      .login-header {
+        text-align: center;
+      }
+      .mobile-logo {
+        display: block;
+        width: 140px;
+        height: auto;
+        margin: 0 auto 2rem;
+        filter: drop-shadow(0 0 12px rgba(232,255,0,0.3));
       }
     }
 
@@ -473,6 +486,7 @@
   <!-- ── RIGHT: LOGIN FORM ────────────────────────────────── -->
   <main class="login-panel" role="main">
     <div class="login-card">
+      <img src="assets/favicon.png" alt="CYKLboard Logo" class="mobile-logo" />
 
       <header class="login-header">
         <h1>Iniciar Sesión</h1>
