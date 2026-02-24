@@ -25,7 +25,7 @@ CYKL.Dashboard = (function () {
 
             // Parallel queries
             const [bikesRes, attendRes, classRes, profilesRes] = await Promise.all([
-                db.from('bikes').select('status'),
+                db.from('bikes').select('id, status').order('id'),
                 db.from('attendances')
                     .select('status, credits_remaining')
                     .gte('updated_at', todayStart)
@@ -45,6 +45,18 @@ CYKL.Dashboard = (function () {
             const attendances = attendRes.data || [];
             const classes = classRes.data || [];
             const staff = profilesRes.data || [];
+
+            // Sync bikeStates for the mini-room
+            if (bikes.length > 0) {
+                bikes.forEach(row => {
+                    const b = CYKL.bikeStates.find(b => b.id === row.id);
+                    if (b) b.status = row.status;
+                });
+                // Trigger mini-room refresh if available
+                if (CYKL.RoomMap && typeof CYKL.RoomMap.updateMiniRoom === 'function') {
+                    CYKL.RoomMap.updateMiniRoom();
+                }
+            }
 
             // Compute stats
             const occupied = bikes.filter(b => b.status === 'occupied').length;
@@ -210,6 +222,12 @@ CYKL.Dashboard = (function () {
         startClock();
         buildSchedule();       // Show seed data immediately
         buildActivityFeed();
+
+        // Populate mini room map
+        if (CYKL.RoomMap && typeof CYKL.RoomMap.updateMiniRoom === 'function') {
+            CYKL.RoomMap.updateMiniRoom();
+        }
+
         await updateKPIs();    // Then overlay with real DB data
 
         document.getElementById('addClassBtn')?.addEventListener('click', () => {
