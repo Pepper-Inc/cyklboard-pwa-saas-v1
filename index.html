@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
-  <meta name="description" content="Xtreme Bike Management — Plataforma SaaS PWA para gestión de salas de cycling, reservas y asistencia en tiempo real." />
+  <meta name="description" content="CYKLboard Management — Plataforma SaaS PWA para gestión de salas de cycling, reservas y asistencia en tiempo real." />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="XtremeBike" />
-  <title>Xtreme Bike Management</title>
+  <meta name="apple-mobile-web-app-title" content="CYKLboard" />
+  <title>CYKLboard Management</title>
 
   <!-- PWA Manifest & Favicon -->
   <link rel="icon" type="image/png" href="assets/favicon.png" />
@@ -39,10 +39,10 @@
   <nav class="sidenav" id="sidenav" role="navigation" aria-label="Navegación principal">
     <div class="sidenav__brand">
       <div class="sidenav__logo-icon" aria-hidden="true">
-        <img src="assets/favicon.png" alt="Xtreme Bike Logo" style="width:100%; height:100%; object-fit:contain;" />
+        <img src="assets/favicon.png" alt="CYKLboard Logo" style="width:100%; height:100%; object-fit:contain;" />
       </div>
       <div class="sidenav__brand-text">
-        <span class="sidenav__brand-name">XTREME BIKE</span>
+        <span class="sidenav__brand-name">CYKLboard</span>
         <span class="sidenav__brand-sub">MANAGEMENT</span>
       </div>
     </div>
@@ -594,7 +594,7 @@
         </div>
         <div class="form-group">
           <label class="form-label" for="editUserEmail">Correo electrónico</label>
-          <input class="form-input" type="email" id="editUserEmail" placeholder="usuario@xtremebike.com" />
+          <input class="form-input" type="email" id="editUserEmail" placeholder="usuario@cyklboard.com" />
         </div>
         <div class="form-group">
           <label class="form-label" for="editUserPhone">Teléfono (opcional)</label>
@@ -736,14 +736,14 @@
   <script>
     // Block the page until we confirm the user is authenticated
     (async function () {
-      const auth = await XBM.Auth.requireAuth();
+      const auth = await CYKL.Auth.requireAuth();
       if (!auth) return; // requireAuth already redirected to login.html
 
       // Hydrate sidebar with real user data
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => XBM.Auth.hydrateSidebar(auth.profile));
+        document.addEventListener('DOMContentLoaded', () => CYKL.Auth.hydrateSidebar(auth.profile));
       } else {
-        XBM.Auth.hydrateSidebar(auth.profile);
+        CYKL.Auth.hydrateSidebar(auth.profile);
       }
     })();
 

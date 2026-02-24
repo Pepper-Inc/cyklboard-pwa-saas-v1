@@ -1,4 +1,4 @@
-# ⚡ XTREME BIKE MANAGEMENT — PWA SaaS MVP
+# ⚡ CYKLBOARD MANAGEMENT — PWA SaaS MVP
 
 **High-Intensity Cycling Studio Management Platform**
 
@@ -9,7 +9,9 @@
 ## 🎯 MODULES
 
 ### Módulo A — Sala de Bikes (Room Map)
+
 Interactive grid of 20 bikes with 4 states:
+
 - **Disponible** → click to open booking modal
 - **Ocupada** → shows rider name  
 - **Bloqueada** → maintenance flag
@@ -18,14 +20,18 @@ Interactive grid of 20 bikes with 4 states:
 Features: filter bar, ripple click effects, booking modal, credit deduction, room reset.
 
 ### Módulo B — Check-in
+
 Instructor interface for marking attendance:
+
 - One-tap `✓` attended / `✗` no-show per user
 - Credit auto-deduction on check-in
 - Bulk mark all attended/no-show
 - CSV export of the attendance list
 
 ### Módulo C — Dashboard
+
 Admin metrics panel:
+
 - **3 KPI cards**: Ocupación %, Ingresos del día, Usuarios activos
 - Animated counter transitions
 - Today's class schedule timeline
@@ -37,7 +43,7 @@ Admin metrics panel:
 ## 🗂 FILE STRUCTURE
 
 ```
-xtremebike-pwa-saas-v1/
+cyklboard-pwa-saas-v1/
 ├── index.html              ← App shell + HTML modules
 ├── manifest.json           ← PWA manifest
 ├── sw.js                   ← Service Worker (offline-first)
@@ -83,16 +89,19 @@ xtremebike-pwa-saas-v1/
 No build step required — pure HTML/CSS/JS.
 
 **Option 1 — VS Code Live Server:**
+
 1. Open folder in VS Code
 2. Right-click `index.html` → Open with Live Server
 
 **Option 2 — Python:**
+
 ```bash
 python3 -m http.server 8080
 # → http://localhost:8080
 ```
 
 **Option 3 — Node (if installed):**
+
 ```bash
 npx serve .
 ```

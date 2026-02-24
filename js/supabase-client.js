@@ -1,5 +1,5 @@
 /**
- * XTREME BIKE MANAGEMENT — SUPABASE CLIENT
+ * CYKLBOARD MANAGEMENT — SUPABASE CLIENT
  * Single source of truth for the Supabase connection
  */
 
@@ -7,7 +7,7 @@ const SUPABASE_URL = 'https://qvnrwhoxccbcgigsrgnd.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_0A1rcbB2PJcYx1KDCVTHqw_gv2v027i';
 
 // createClient is injected by the Supabase CDN script
-window.xbmDB = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+window.cyklDB = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: {
         persistSession: true,
         autoRefreshToken: true,
@@ -19,6 +19,6 @@ window.xbmDB = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 });
 
 // Convenience alias
-window.db = window.xbmDB;
+window.db = window.cyklDB;
 
-console.log('[XBM] Supabase client ready:', SUPABASE_URL);
+console.log('[CYKL] Supabase client ready:', SUPABASE_URL);

@@ -1,12 +1,12 @@
 /**
- * XTREME BIKE MANAGEMENT — DASHBOARD.JS
+ * CYKLBOARD MANAGEMENT — DASHBOARD.JS
  * Module C: Admin Dashboard
  * Loads real metrics from Supabase
  */
 
-window.XBM = window.XBM || {};
+window.CYKL = window.CYKL || {};
 
-XBM.Dashboard = (function () {
+CYKL.Dashboard = (function () {
     'use strict';
 
     /* ── SUPABASE: LOAD REAL STATS ───────────────────────────────── */
@@ -70,7 +70,7 @@ XBM.Dashboard = (function () {
         if (dbStats) {
             // Ocupación from DB
             const kpiOcEl = document.getElementById('kpi-ocupacion');
-            if (kpiOcEl) XBM.animateNumber(kpiOcEl, dbStats.pct, '%');
+            if (kpiOcEl) CYKL.animateNumber(kpiOcEl, dbStats.pct, '%');
             const subEl = document.getElementById('kpi-ocupacion-sub');
             if (subEl) subEl.textContent = `${dbStats.occupied + dbStats.blocked} de 20 bikes`;
 
@@ -80,11 +80,11 @@ XBM.Dashboard = (function () {
 
             // Usuarios activos from DB
             const kpiUEl = document.getElementById('kpi-usuarios');
-            if (kpiUEl) XBM.animateNumber(kpiUEl, dbStats.active);
+            if (kpiUEl) CYKL.animateNumber(kpiUEl, dbStats.active);
 
             // Staff Count from DB
             const kpiSEl = document.getElementById('kpi-staff');
-            if (kpiSEl) XBM.animateNumber(kpiSEl, dbStats.staffCount);
+            if (kpiSEl) CYKL.animateNumber(kpiSEl, dbStats.staffCount);
 
             // Update schedule if we got real classes
             if (dbStats.classes && dbStats.classes.length > 0) {
@@ -92,20 +92,20 @@ XBM.Dashboard = (function () {
             }
         } else {
             // Fallback: use local computed stats
-            const stats = XBM.getStats();
+            const stats = CYKL.getStats();
 
             const kpiOcEl = document.getElementById('kpi-ocupacion');
-            if (kpiOcEl) XBM.animateNumber(kpiOcEl, stats.pct, '%');
+            if (kpiOcEl) CYKL.animateNumber(kpiOcEl, stats.pct, '%');
             const subEl = document.getElementById('kpi-ocupacion-sub');
-            if (subEl) subEl.textContent = `${stats.occupied + stats.blocked} de ${XBM.TOTAL_BIKES} bikes`;
+            if (subEl) subEl.textContent = `${stats.occupied + stats.blocked} de ${CYKL.TOTAL_BIKES} bikes`;
 
             const kpiInEl = document.getElementById('kpi-ingresos');
             if (kpiInEl) animateCurrency(kpiInEl, stats.income);
 
-            const activeUsers = Object.values(XBM.attendees).flat()
+            const activeUsers = Object.values(CYKL.attendees).flat()
                 .filter(u => u.status === 'attended' || u.status === 'pending').length;
             const kpiUEl = document.getElementById('kpi-usuarios');
-            if (kpiUEl) XBM.animateNumber(kpiUEl, activeUsers);
+            if (kpiUEl) CYKL.animateNumber(kpiUEl, activeUsers);
         }
 
         // Occupancy bar
@@ -121,7 +121,7 @@ XBM.Dashboard = (function () {
         function step(now) {
             const prog = Math.min((now - start) / dur, 1);
             const ease = 1 - Math.pow(1 - prog, 3);
-            el.textContent = XBM.formatCurrency(Math.round(target * ease));
+            el.textContent = CYKL.formatCurrency(Math.round(target * ease));
             if (prog < 1) requestAnimationFrame(step);
         }
         requestAnimationFrame(step);
@@ -160,7 +160,7 @@ XBM.Dashboard = (function () {
         if (!container) return;
         container.innerHTML = '';
 
-        XBM.schedule.forEach((cls, i) => {
+        CYKL.schedule.forEach((cls, i) => {
             const item = document.createElement('div');
             item.className = `schedule-item ${cls.status === 'active' ? 'is-active' : cls.status === 'done' ? 'is-done' : ''}`;
             item.style.animationDelay = `${i * 60}ms`;
@@ -185,7 +185,7 @@ XBM.Dashboard = (function () {
         const feed = document.getElementById('activityFeed');
         if (!feed) return;
         feed.innerHTML = '';
-        XBM.activityLog.forEach(entry => {
+        CYKL.activityLog.forEach(entry => {
             const item = document.createElement('div');
             item.className = 'activity-item';
             item.innerHTML = `
@@ -200,7 +200,7 @@ XBM.Dashboard = (function () {
     /* ── LIVE CLOCK ──────────────────────────────────────────────── */
     function startClock() {
         const el = document.getElementById('currentDate');
-        const tick = () => { if (el) el.textContent = XBM.formatDate(); };
+        const tick = () => { if (el) el.textContent = CYKL.formatDate(); };
         tick();
         setInterval(tick, 60000);
     }
@@ -213,7 +213,7 @@ XBM.Dashboard = (function () {
         await updateKPIs();    // Then overlay with real DB data
 
         document.getElementById('addClassBtn')?.addEventListener('click', () => {
-            XBM.toast({ title: 'Agregar Clase', msg: 'Función disponible en la versión Pro.', type: 'info' });
+            CYKL.toast({ title: 'Agregar Clase', msg: 'Función disponible en la versión Pro.', type: 'info' });
         });
     }
 

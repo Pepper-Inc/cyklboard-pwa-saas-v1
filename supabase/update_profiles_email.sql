@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- XTREME BIKE — ADD EMAIL TO PROFILES
+-- CYKLBOARD — ADD EMAIL TO PROFILES
 -- Run in: Supabase Dashboard → SQL Editor → New Query
 -- ════════════════════════════════════════════════════════════════
 

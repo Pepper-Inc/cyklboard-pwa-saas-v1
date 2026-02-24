@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
-  <meta name="description" content="Acceso a Xtreme Bike Management — Plataforma de gestión de cycling." />
-  <title>Iniciar Sesión · Xtreme Bike Management</title>
+  <meta name="description" content="Acceso a CYKLboard Management — Plataforma de gestión de cycling." />
+  <title>Iniciar Sesión · CYKLboard Management</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -434,7 +434,7 @@
   <aside class="brand-panel" aria-hidden="true">
     <div class="brand-content">
       <!-- Official Web Logo -->
-      <img src="assets/favicon.png" alt="Xtreme Bike Logo" class="brand-logo-img" />
+      <img src="assets/favicon.png" alt="CYKLboard Logo" class="brand-logo-img" />
 
       <p class="brand-sub">Management Platform</p>
 
@@ -459,7 +459,7 @@
 
       <header class="login-header">
         <h1>Iniciar Sesión</h1>
-        <p>Accede a tu cuenta de Xtreme Bike Management</p>
+        <p>Accede a tu cuenta de CYKLboard Management</p>
       </header>
 
       <form id="loginForm" novalidate aria-label="Formulario de inicio de sesión">
@@ -481,7 +481,7 @@
               type="email"
               id="email"
               name="email"
-              placeholder="instructor@xtremebike.com"
+              placeholder="instructor@cyklboard.com"
               autocomplete="email"
               inputmode="email"
               required
@@ -537,7 +537,7 @@
     </div>
   </main>
 
-  <p class="version-tag">XBM v1.0 · MVP</p>
+  <p class="version-tag">CYKL v1.0 · MVP</p>
 
   <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -546,7 +546,7 @@
   <script>
     (async function () {
       // Redirect if already authenticated
-      await XBM.Auth.redirectIfAuthenticated();
+      await CYKL.Auth.redirectIfAuthenticated();
 
       const form      = document.getElementById('loginForm');
       const loginBtn  = document.getElementById('loginBtn');
@@ -581,7 +581,7 @@
         errorMsg.classList.remove('visible');
 
         try {
-          await XBM.Auth.login(email, password);
+          await CYKL.Auth.login(email, password);
           // Successful → Supabase persists session automatically
           window.location.href = 'index.html';
         } catch (err) {

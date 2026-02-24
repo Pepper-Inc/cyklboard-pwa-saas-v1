@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- XTREME BIKE — USER MANAGEMENT MIGRATION
+-- CYKLBOARD — USER MANAGEMENT MIGRATION
 -- Run in: Supabase Dashboard → SQL Editor → New Query
 -- ════════════════════════════════════════════════════════════════
 

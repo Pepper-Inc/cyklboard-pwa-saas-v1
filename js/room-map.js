@@ -1,12 +1,12 @@
 /**
- * XTREME BIKE MANAGEMENT — ROOM-MAP.JS
+ * CYKLBOARD MANAGEMENT — ROOM-MAP.JS
  * Module A: Interactive Room Map
  * Persists bike state to Supabase (bikes + reservations tables)
  */
 
-window.XBM = window.XBM || {};
+window.CYKL = window.CYKL || {};
 
-XBM.RoomMap = (function () {
+CYKL.RoomMap = (function () {
     'use strict';
 
     let selectedBikeId = null;
@@ -30,7 +30,7 @@ XBM.RoomMap = (function () {
             if (!data || data.length === 0) return;
 
             data.forEach(row => {
-                const b = XBM.bikeStates.find(b => b.id === row.id);
+                const b = CYKL.bikeStates.find(b => b.id === row.id);
                 if (b) {
                     b.status = row.status;
                     b.user = row.current_user_name || null;
@@ -51,7 +51,7 @@ XBM.RoomMap = (function () {
                 current_user_name: bike.user || null,
                 credits_remaining: bike.credits ?? null,
                 updated_at: new Date().toISOString(),
-                updated_by: XBM.Auth?.user?.id || null,
+                updated_by: CYKL.Auth?.user?.id || null,
             }).eq('id', bike.id);
         } catch (err) {
             console.warn('[RoomMap] Bike save error:', err.message);
@@ -68,7 +68,7 @@ XBM.RoomMap = (function () {
                 user_name: userName,
                 credits_used: 1,
                 credits_remaining: creditsLeft,
-                created_by: XBM.Auth?.user?.id || null,
+                created_by: CYKL.Auth?.user?.id || null,
             });
         } catch (err) {
             console.warn('[RoomMap] Reservation save error:', err.message);
@@ -99,7 +99,7 @@ XBM.RoomMap = (function () {
                 { event: 'UPDATE', schema: 'public', table: 'bikes' },
                 payload => {
                     const row = payload.new;
-                    const bike = XBM.bikeStates.find(b => b.id === row.id);
+                    const bike = CYKL.bikeStates.find(b => b.id === row.id);
                     if (!bike) return;
 
                     bike.status = row.status;
@@ -112,7 +112,7 @@ XBM.RoomMap = (function () {
 
                     updateStats();
                     updateMiniRoom();
-                    if (typeof XBM.Dashboard?.updateKPIs === 'function') XBM.Dashboard.updateKPIs();
+                    if (typeof CYKL.Dashboard?.updateKPIs === 'function') CYKL.Dashboard.updateKPIs();
                 })
             .subscribe();
     }
@@ -122,7 +122,7 @@ XBM.RoomMap = (function () {
         const grid = document.getElementById('roomGrid');
         if (!grid) return;
         grid.innerHTML = '';
-        XBM.bikeStates.forEach(bike => grid.appendChild(createBikeCard(bike)));
+        CYKL.bikeStates.forEach(bike => grid.appendChild(createBikeCard(bike)));
         updateStats();
         updateMiniRoom();
     }
@@ -267,8 +267,8 @@ XBM.RoomMap = (function () {
 
     function openNewClientModal(name) {
         document.getElementById('clientSuggestions').classList.remove('is-open');
-        if (typeof XBM.Clients?.openInviteModal === 'function') {
-            XBM.Clients.openInviteModal();
+        if (typeof CYKL.Clients?.openInviteModal === 'function') {
+            CYKL.Clients.openInviteModal();
             // Capitalize each word (Title Case)
             const capitalized = name.split(' ')
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
@@ -279,16 +279,16 @@ XBM.RoomMap = (function () {
 
     /* ── BOOKING MODAL ────────────────────────────────────────── */
     function handleBikeClick(e, bikeId) {
-        const bike = XBM.bikeStates.find(b => b.id === bikeId);
+        const bike = CYKL.bikeStates.find(b => b.id === bikeId);
         if (!bike) return;
-        XBM.addRipple(e.currentTarget, e);
+        CYKL.addRipple(e.currentTarget, e);
         openBikeModal(bikeId);
     }
 
     /* ── BIKE MODAL ───────────────────────────────────────────── */
     function openBikeModal(bikeId) {
         selectedBikeId = bikeId;
-        const bike = XBM.bikeStates.find(b => b.id === bikeId);
+        const bike = CYKL.bikeStates.find(b => b.id === bikeId);
         if (!bike) return;
 
         fetchClients(); // Load fresh list
@@ -355,7 +355,7 @@ XBM.RoomMap = (function () {
         if (selectedBikeId) {
             const card = document.getElementById(`bike-${selectedBikeId}`);
             if (card) {
-                const bike = XBM.bikeStates.find(b => b.id === selectedBikeId);
+                const bike = CYKL.bikeStates.find(b => b.id === selectedBikeId);
                 if (bike) {
                     card.classList.remove('bike-card--selected');
                     card.classList.add(`bike-card--${bike.status}`);
@@ -372,16 +372,16 @@ XBM.RoomMap = (function () {
         const cls = document.getElementById('bookingClass').value;
 
         if (!name) {
-            XBM.toast({ title: 'Campo requerido', msg: 'Ingresa el nombre del usuario.', type: 'danger' });
+            CYKL.toast({ title: 'Campo requerido', msg: 'Ingresa el nombre del usuario.', type: 'danger' });
             document.getElementById('bookingName').focus();
             return;
         }
         if (isNaN(credits) || credits < 1) {
-            XBM.toast({ title: 'Créditos insuficientes', msg: 'El usuario necesita al menos 1 crédito.', type: 'danger' });
+            CYKL.toast({ title: 'Créditos insuficientes', msg: 'El usuario necesita al menos 1 crédito.', type: 'danger' });
             return;
         }
 
-        const bike = XBM.bikeStates.find(b => b.id === selectedBikeId);
+        const bike = CYKL.bikeStates.find(b => b.id === selectedBikeId);
         if (!bike || bike.status !== 'available') return;
 
         const creditsLeft = credits - 1;
@@ -409,12 +409,12 @@ XBM.RoomMap = (function () {
         saveBikeToDB(bike);
         saveReservationToDB({ bikeId: storedId, userName: name, creditsLeft, classId: cls });
 
-        XBM.toast({ title: `Bike #${storedId} Reservada`, msg: `${name} · ${creditsLeft} créd. restantes`, type: 'success' });
-        XBM.addActivity({ type: 'neon', text: `<strong>Bike #${storedId}</strong> reservada por ${name}` });
+        CYKL.toast({ title: `Bike #${storedId} Reservada`, msg: `${name} · ${creditsLeft} créd. restantes`, type: 'success' });
+        CYKL.addActivity({ type: 'neon', text: `<strong>Bike #${storedId}</strong> reservada por ${name}` });
 
         updateStats();
         updateMiniRoom();
-        if (typeof XBM.Dashboard?.updateKPIs === 'function') XBM.Dashboard.updateKPIs();
+        if (typeof CYKL.Dashboard?.updateKPIs === 'function') CYKL.Dashboard.updateKPIs();
 
         if (card) card.addEventListener('click', e => handleBikeClick(e, storedId));
     }
@@ -422,7 +422,7 @@ XBM.RoomMap = (function () {
     /* ── BLOCK BIKE ───────────────────────────────────────────── */
     function blockBike() {
         if (!selectedBikeId) return;
-        const bike = XBM.bikeStates.find(b => b.id === selectedBikeId);
+        const bike = CYKL.bikeStates.find(b => b.id === selectedBikeId);
         if (!bike || bike.status !== 'available') return;
 
         bike.status = 'blocked';
@@ -444,33 +444,33 @@ XBM.RoomMap = (function () {
         // Persist to Supabase
         saveBikeToDB(bike);
 
-        XBM.toast({ title: `Bike #${storedId} Bloqueada`, msg: 'Marcada como fuera de servicio.', type: 'danger' });
-        XBM.addActivity({ type: 'danger', text: `<strong>Bike #${storedId}</strong> bloqueada por mantenimiento` });
+        CYKL.toast({ title: `Bike #${storedId} Bloqueada`, msg: 'Marcada como fuera de servicio.', type: 'danger' });
+        CYKL.addActivity({ type: 'danger', text: `<strong>Bike #${storedId}</strong> bloqueada por mantenimiento` });
 
         updateStats();
         updateMiniRoom();
-        if (typeof XBM.Dashboard?.updateKPIs === 'function') XBM.Dashboard.updateKPIs();
+        if (typeof CYKL.Dashboard?.updateKPIs === 'function') CYKL.Dashboard.updateKPIs();
     }
 
     /* ── RESET ROOM ───────────────────────────────────────────── */
     async function resetRoom() {
         if (!confirm('¿Resetear toda la sala? Esto libera todas las bicicletas.')) return;
 
-        XBM.bikeStates.forEach(b => { b.status = 'available'; b.user = null; b.class = null; b.credits = null; });
+        CYKL.bikeStates.forEach(b => { b.status = 'available'; b.user = null; b.class = null; b.credits = null; });
 
         await resetBikesInDB();
 
         buildGrid();
         applyFilter(currentFilter);
-        XBM.toast({ title: 'Sala Reseteada', msg: 'Todas las bikes están disponibles.', type: 'neon' });
-        XBM.addActivity({ type: 'info', text: '<strong>Sala</strong> reseteada para nueva clase' });
-        if (typeof XBM.Dashboard?.updateKPIs === 'function') XBM.Dashboard.updateKPIs();
+        CYKL.toast({ title: 'Sala Reseteada', msg: 'Todas las bikes están disponibles.', type: 'neon' });
+        CYKL.addActivity({ type: 'info', text: '<strong>Sala</strong> reseteada para nueva clase' });
+        if (typeof CYKL.Dashboard?.updateKPIs === 'function') CYKL.Dashboard.updateKPIs();
     }
 
     /* ── DELETE RESERVATION ───────────────────────────────────── */
     function deleteReservation() {
         if (!selectedBikeId) return;
-        const bike = XBM.bikeStates.find(b => b.id === selectedBikeId);
+        const bike = CYKL.bikeStates.find(b => b.id === selectedBikeId);
         if (!bike || bike.status !== 'occupied') return;
 
         if (!confirm(`¿Eliminar la reserva de ${bike.user}?`)) return;
@@ -493,18 +493,18 @@ XBM.RoomMap = (function () {
         // Persist to Supabase
         saveBikeToDB(bike);
 
-        XBM.toast({ title: 'Reserva Eliminada', msg: `Bike #${storedId} ahora está disponible.`, type: 'info' });
-        XBM.addActivity({ type: 'info', text: `Reserva de <strong>${userName}</strong> eliminada (Bike #${storedId})` });
+        CYKL.toast({ title: 'Reserva Eliminada', msg: `Bike #${storedId} ahora está disponible.`, type: 'info' });
+        CYKL.addActivity({ type: 'info', text: `Reserva de <strong>${userName}</strong> eliminada (Bike #${storedId})` });
 
         updateStats();
         updateMiniRoom();
-        if (typeof XBM.Dashboard?.updateKPIs === 'function') XBM.Dashboard.updateKPIs();
+        if (typeof CYKL.Dashboard?.updateKPIs === 'function') CYKL.Dashboard.updateKPIs();
     }
 
     /* ── UNBLOCK BIKE ─────────────────────────────────────────── */
     function unblockBike() {
         if (!selectedBikeId) return;
-        const bike = XBM.bikeStates.find(b => b.id === selectedBikeId);
+        const bike = CYKL.bikeStates.find(b => b.id === selectedBikeId);
         if (!bike || bike.status !== 'blocked') return;
 
         bike.status = 'available';
@@ -523,19 +523,19 @@ XBM.RoomMap = (function () {
         // Persist to Supabase
         saveBikeToDB(bike);
 
-        XBM.toast({ title: 'Bike Desbloqueada', msg: `Bike #${storedId} lista para reservarse.`, type: 'success' });
-        XBM.addActivity({ type: 'success', text: `<strong>Bike #${storedId}</strong> desbloqueada y disponible` });
+        CYKL.toast({ title: 'Bike Desbloqueada', msg: `Bike #${storedId} lista para reservarse.`, type: 'success' });
+        CYKL.addActivity({ type: 'success', text: `<strong>Bike #${storedId}</strong> desbloqueada y disponible` });
 
         updateStats();
         updateMiniRoom();
-        if (typeof XBM.Dashboard?.updateKPIs === 'function') XBM.Dashboard.updateKPIs();
+        if (typeof CYKL.Dashboard?.updateKPIs === 'function') CYKL.Dashboard.updateKPIs();
     }
 
     /* ── FILTER ───────────────────────────────────────────────── */
     function applyFilter(filter) {
         currentFilter = filter;
         document.querySelectorAll('#roomGrid .bike-card').forEach(card => {
-            const bike = XBM.bikeStates.find(b => b.id === parseInt(card.dataset.id, 10));
+            const bike = CYKL.bikeStates.find(b => b.id === parseInt(card.dataset.id, 10));
             if (!bike) return;
             card.classList.toggle('bike-card--hidden', filter !== 'all' && bike.status !== filter);
         });
@@ -548,7 +548,7 @@ XBM.RoomMap = (function () {
 
     /* ── STATS & MINI ROOM ────────────────────────────────────── */
     function updateStats() {
-        const s = XBM.getStats();
+        const s = CYKL.getStats();
         const avEl = document.getElementById('rmAvailableCount');
         const ocEl = document.getElementById('rmOccupiedCount');
         const blEl = document.getElementById('rmBlockedCount');
@@ -561,7 +561,7 @@ XBM.RoomMap = (function () {
         const mini = document.getElementById('miniRoom');
         if (!mini) return;
         mini.innerHTML = '';
-        XBM.bikeStates.forEach(bike => {
+        CYKL.bikeStates.forEach(bike => {
             const dot = document.createElement('div');
             dot.className = `mini-bike mini-bike--${bike.status}`;
             dot.title = `Bike #${bike.id}${bike.user ? ': ' + bike.user : ''}`;

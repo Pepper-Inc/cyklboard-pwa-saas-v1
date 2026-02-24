@@ -1,5 +1,5 @@
 /**
- * XTREME BIKE MANAGEMENT — QR.JS
+ * CYKLBOARD MANAGEMENT — QR.JS
  * QR Code generation (per user) + Camera scanner (check-in by QR)
  *
  * - QRCode generation: qrcode.js CDN
@@ -7,9 +7,9 @@
  * - Graceful fallback when camera is unavailable (file:// protocol)
  */
 
-window.XBM = window.XBM || {};
+window.CYKL = window.CYKL || {};
 
-XBM.QR = (function () {
+CYKL.QR = (function () {
     'use strict';
 
     let videoStream = null;
@@ -35,7 +35,7 @@ XBM.QR = (function () {
     /* ── GENERATE QR FOR USER CARD ───────────────────────────── */
     async function generateUserQR(user) {
         if (!window.QRCode) {
-            XBM.toast({ title: 'QR no disponible', msg: 'Librería cargando, intenta de nuevo.', type: 'info' });
+            CYKL.toast({ title: 'QR no disponible', msg: 'Librería cargando, intenta de nuevo.', type: 'info' });
             return;
         }
 
@@ -117,7 +117,7 @@ XBM.QR = (function () {
         } catch (err) {
             console.warn('[QR] Camera error:', err.message);
             if (err.name === 'NotAllowedError') {
-                XBM.toast({ title: 'Permiso denegado', msg: 'Permite el acceso a la cámara.', type: 'danger' });
+                CYKL.toast({ title: 'Permiso denegado', msg: 'Permite el acceso a la cámara.', type: 'danger' });
             }
             showNoCameraState();
         }
@@ -194,10 +194,10 @@ XBM.QR = (function () {
     /* ── AUTO CHECK-IN ───────────────────────────────────────── */
     function autoCheckIn(userData) {
         // Find user in active class list and mark as attended
-        const activeClassKey = XBM.CheckIn?._activeClassKey;
+        const activeClassKey = CYKL.CheckIn?._activeClassKey;
         const attendees = activeClassKey
-            ? (XBM.attendees[activeClassKey] || [])
-            : Object.values(XBM.attendees || {}).flat();
+            ? (CYKL.attendees[activeClassKey] || [])
+            : Object.values(CYKL.attendees || {}).flat();
 
         const user = attendees.find(u =>
             u.name.toLowerCase().trim() === userData.name.toLowerCase().trim() ||
@@ -206,21 +206,21 @@ XBM.QR = (function () {
 
         if (user) {
             if (user.status === 'attended') {
-                XBM.toast({ title: 'Ya registrado', msg: `${user.name} ya tiene asistencia confirmada.`, type: 'info' });
+                CYKL.toast({ title: 'Ya registrado', msg: `${user.name} ya tiene asistencia confirmada.`, type: 'info' });
                 return;
             }
             user.status = 'attended';
             if (user.credits > 0) user.credits--;
 
             // Trigger re-render via CheckIn module if available
-            if (typeof XBM.CheckIn?.loadClass === 'function') {
-                XBM.CheckIn.loadClass(activeClassKey);
+            if (typeof CYKL.CheckIn?.loadClass === 'function') {
+                CYKL.CheckIn.loadClass(activeClassKey);
             }
 
-            XBM.toast({ title: '✓ Check-in QR', msg: `${user.name} · Bike #${user.bike}`, type: 'success' });
-            XBM.addActivity?.({ type: 'success', text: `<strong>${user.name}</strong> — Check-in por QR · Bike #${user.bike}` });
+            CYKL.toast({ title: '✓ Check-in QR', msg: `${user.name} · Bike #${user.bike}`, type: 'success' });
+            CYKL.addActivity?.({ type: 'success', text: `<strong>${user.name}</strong> — Check-in por QR · Bike #${user.bike}` });
         } else {
-            XBM.toast({ title: 'Usuario no encontrado', msg: `${userData.name} no está en la lista activa.`, type: 'danger' });
+            CYKL.toast({ title: 'Usuario no encontrado', msg: `${userData.name} no está en la lista activa.`, type: 'danger' });
         }
     }
 
@@ -267,4 +267,4 @@ XBM.QR = (function () {
     return { init, openScanner, closeScanner, generateUserQR, encodeUserQR };
 })();
 
-document.addEventListener('DOMContentLoaded', () => XBM.QR.init());
+document.addEventListener('DOMContentLoaded', () => CYKL.QR.init());

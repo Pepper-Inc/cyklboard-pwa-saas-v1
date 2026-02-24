@@ -1,5 +1,5 @@
 /**
- * XTREME BIKE MANAGEMENT — USERS.JS
+ * CYKLBOARD MANAGEMENT — USERS.JS
  * Module D: User Management (Admin only)
  *
  * Features:
@@ -10,9 +10,9 @@
  *  - Real-time updates via Supabase subscription
  */
 
-window.XBM = window.XBM || {};
+window.CYKL = window.CYKL || {};
 
-XBM.Users = (function () {
+CYKL.Users = (function () {
     'use strict';
 
     let profiles = [];
@@ -53,7 +53,7 @@ XBM.Users = (function () {
             return true;
         } catch (err) {
             console.warn('[Users] Save error:', err.message);
-            XBM.toast({ title: 'Error al guardar', msg: err.message, type: 'danger' });
+            CYKL.toast({ title: 'Error al guardar', msg: err.message, type: 'danger' });
             return false;
         }
     }
@@ -75,7 +75,7 @@ XBM.Users = (function () {
             return true;
         } catch (err) {
             console.warn('[Users] Invite error:', err.message);
-            XBM.toast({ title: 'Error al invitar', msg: err.message, type: 'danger' });
+            CYKL.toast({ title: 'Error al invitar', msg: err.message, type: 'danger' });
             return false;
         }
     }
@@ -102,7 +102,7 @@ XBM.Users = (function () {
         }
 
         container.innerHTML = '';
-        const isAdmin = XBM.Auth?.profile?.role === 'admin';
+        const isAdmin = CYKL.Auth?.profile?.role === 'admin';
 
         profiles.forEach((p, i) => {
             const card = buildUserCard(p, isAdmin, i);
@@ -212,8 +212,8 @@ XBM.Users = (function () {
         const card = document.getElementById(`ucard-${profile.id}`);
         if (card) card.replaceWith(buildUserCard(profile, true));
 
-        XBM.toast({ title: `Usuario ${newVal ? 'activado' : 'desactivado'}`, msg: profile.full_name, type: newVal ? 'success' : 'danger' });
-        XBM.addActivity?.({ type: newVal ? 'success' : 'danger', text: `<strong>${profile.full_name}</strong> — cuenta ${newVal ? 'activada' : 'desactivada'}` });
+        CYKL.toast({ title: `Usuario ${newVal ? 'activado' : 'desactivado'}`, msg: profile.full_name, type: newVal ? 'success' : 'danger' });
+        CYKL.addActivity?.({ type: newVal ? 'success' : 'danger', text: `<strong>${profile.full_name}</strong> — cuenta ${newVal ? 'activada' : 'desactivada'}` });
         updateUserStats();
     }
 
@@ -224,7 +224,7 @@ XBM.Users = (function () {
         // Final confirmation for safety
         const doubleCheck = prompt(`Escribe el nombre del usuario para confirmar: ${profile.full_name}`);
         if (doubleCheck !== profile.full_name) {
-            XBM.toast({ title: 'Cancelado', msg: 'El nombre no coincide.', type: 'info' });
+            CYKL.toast({ title: 'Cancelado', msg: 'El nombre no coincide.', type: 'info' });
             return;
         }
 
@@ -242,14 +242,14 @@ XBM.Users = (function () {
 
             if (error) throw error;
 
-            XBM.toast({ title: 'Usuario eliminado', msg: 'Se ha borrado de la base de datos.', type: 'danger' });
-            XBM.addActivity?.({ type: 'danger', text: `<strong>${profile.full_name}</strong> — usuario ELIMINADO permanentemente` });
+            CYKL.toast({ title: 'Usuario eliminado', msg: 'Se ha borrado de la base de datos.', type: 'danger' });
+            CYKL.addActivity?.({ type: 'danger', text: `<strong>${profile.full_name}</strong> — usuario ELIMINADO permanentemente` });
 
             await loadAndRender();
 
         } catch (err) {
             console.warn('[Users] Delete error:', err.message);
-            XBM.toast({ title: 'Error', msg: 'No se pudo eliminar: ' + err.message, type: 'danger' });
+            CYKL.toast({ title: 'Error', msg: 'No se pudo eliminar: ' + err.message, type: 'danger' });
             if (btn) {
                 btn.disabled = false;
                 btn.textContent = 'Eliminar';
@@ -296,7 +296,7 @@ XBM.Users = (function () {
         };
 
         if (!changes.full_name) {
-            XBM.toast({ title: 'Campo requerido', msg: 'El nombre no puede estar vacío.', type: 'danger' });
+            CYKL.toast({ title: 'Campo requerido', msg: 'El nombre no puede estar vacío.', type: 'danger' });
             return;
         }
 
@@ -316,8 +316,8 @@ XBM.Users = (function () {
 
         closeEditModal();
         render();
-        XBM.toast({ title: '✓ Perfil actualizado', msg: changes.full_name, type: 'success' });
-        XBM.addActivity?.({ type: 'info', text: `<strong>${changes.full_name}</strong> — perfil actualizado` });
+        CYKL.toast({ title: '✓ Perfil actualizado', msg: changes.full_name, type: 'success' });
+        CYKL.addActivity?.({ type: 'info', text: `<strong>${changes.full_name}</strong> — perfil actualizado` });
     }
 
     /* ══════════════════════════════════════════════════════════
@@ -348,11 +348,11 @@ XBM.Users = (function () {
         const status = document.getElementById('inviteStatus');
 
         if (!email || !fullName) {
-            XBM.toast({ title: 'Campos requeridos', msg: 'Email y nombre son obligatorios.', type: 'danger' });
+            CYKL.toast({ title: 'Campos requeridos', msg: 'Email y nombre son obligatorios.', type: 'danger' });
             return;
         }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            XBM.toast({ title: 'Email inválido', msg: 'Verifica el formato del correo.', type: 'danger' });
+            CYKL.toast({ title: 'Email inválido', msg: 'Verifica el formato del correo.', type: 'danger' });
             return;
         }
 
@@ -369,8 +369,8 @@ XBM.Users = (function () {
         if (ok) {
             status.className = 'invite-status invite-status--ok';
             status.textContent = `✓ Enlace de acceso enviado a ${email}. El instructor debe hacer clic en el enlace para activar su cuenta.`;
-            XBM.toast({ title: '✉ Invitación enviada', msg: email, type: 'success' });
-            XBM.addActivity?.({ type: 'info', text: `Invitación enviada a <strong>${fullName}</strong> (${email})` });
+            CYKL.toast({ title: '✉ Invitación enviada', msg: email, type: 'success' });
+            CYKL.addActivity?.({ type: 'info', text: `Invitación enviada a <strong>${fullName}</strong> (${email})` });
             // Auto-close after 4s
             setTimeout(() => { closeInviteModal(); loadAndRender(); }, 4000);
         }

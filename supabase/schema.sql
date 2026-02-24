@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- XTREME BIKE MANAGEMENT — SUPABASE SCHEMA
+-- CYKLBOARD MANAGEMENT — SUPABASE SCHEMA
 -- Run this in: Supabase Dashboard → SQL Editor → New Query
 -- ════════════════════════════════════════════════════════════════
 
@@ -14,7 +14,7 @@ create table if not exists public.profiles (
   email       text,
   role        text not null default 'instructor'
                 check (role in ('admin', 'instructor', 'client')),
-  gym_name    text default 'Xtreme Bike Studio',
+  gym_name    text default 'CYKLboard Studio',
   avatar_url  text,
   created_at  timestamptz default now(),
   updated_at  timestamptz default now()

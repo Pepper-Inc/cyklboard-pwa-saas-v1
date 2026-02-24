@@ -1,12 +1,12 @@
 /**
- * XTREME BIKE MANAGEMENT — UTILS.JS
+ * CYKLBOARD MANAGEMENT — UTILS.JS
  * Shared utility functions
  */
 
-window.XBM = window.XBM || {};
+window.CYKL = window.CYKL || {};
 
 /* ── TOAST NOTIFICATIONS ────────────────────────────────────── */
-XBM.toast = function ({ title, msg = '', type = 'neon', duration = 3500 }) {
+CYKL.toast = function ({ title, msg = '', type = 'neon', duration = 3500 }) {
     const container = document.getElementById('toastContainer');
     if (!container) return;
 
@@ -47,7 +47,7 @@ XBM.toast = function ({ title, msg = '', type = 'neon', duration = 3500 }) {
 };
 
 /* ── FORMAT CURRENCY ────────────────────────────────────────── */
-XBM.formatCurrency = function (amount) {
+CYKL.formatCurrency = function (amount) {
     return new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN',
@@ -57,7 +57,7 @@ XBM.formatCurrency = function (amount) {
 };
 
 /* ── GET INITIALS ───────────────────────────────────────────── */
-XBM.getInitials = function (name) {
+CYKL.getInitials = function (name) {
     return name
         .split(' ')
         .slice(0, 2)
@@ -67,7 +67,7 @@ XBM.getInitials = function (name) {
 };
 
 /* ── ADD RIPPLE EFFECT ──────────────────────────────────────── */
-XBM.addRipple = function (el, event) {
+CYKL.addRipple = function (el, event) {
     const rect = el.getBoundingClientRect();
     const size = Math.max(rect.width, rect.height);
     const x = (event.clientX - rect.left) - size / 2;
@@ -84,12 +84,12 @@ XBM.addRipple = function (el, event) {
 };
 
 /* ── FORMAT TIME ────────────────────────────────────────────── */
-XBM.formatTime = function (date = new Date()) {
+CYKL.formatTime = function (date = new Date()) {
     return date.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
 };
 
 /* ── FORMAT DATE ────────────────────────────────────────────── */
-XBM.formatDate = function (date = new Date()) {
+CYKL.formatDate = function (date = new Date()) {
     return date.toLocaleDateString('es-MX', {
         weekday: 'long',
         day: 'numeric',
@@ -99,7 +99,7 @@ XBM.formatDate = function (date = new Date()) {
 };
 
 /* ── ANIMATE NUMBER ─────────────────────────────────────────── */
-XBM.animateNumber = function (el, target, suffix = '', duration = 800) {
+CYKL.animateNumber = function (el, target, suffix = '', duration = 800) {
     const start = performance.now();
     const from = parseFloat(el.textContent.replace(/[^0-9.]/g, '')) || 0;
 
@@ -117,10 +117,10 @@ XBM.animateNumber = function (el, target, suffix = '', duration = 800) {
 };
 
 /* ── ADD ACTIVITY ITEM ──────────────────────────────────────── */
-XBM.addActivity = function ({ type = 'neon', text, time }) {
-    if (!time) time = XBM.formatTime();
-    XBM.activityLog.unshift({ type, text, time });
-    if (XBM.activityLog.length > 20) XBM.activityLog.pop();
+CYKL.addActivity = function ({ type = 'neon', text, time }) {
+    if (!time) time = CYKL.formatTime();
+    CYKL.activityLog.unshift({ type, text, time });
+    if (CYKL.activityLog.length > 20) CYKL.activityLog.pop();
 
     const feed = document.getElementById('activityFeed');
     if (!feed) return;

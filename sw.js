@@ -1,9 +1,9 @@
 /**
- * XTREME BIKE MANAGEMENT — SERVICE WORKER
+ * CYKLBOARD MANAGEMENT — SERVICE WORKER
  * Offline-first PWA caching strategy
  */
 
-const CACHE_VERSION = 'xbm-v1.0.1';
+const CACHE_VERSION = 'cykl-v1.0.1';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const DYNAMIC_CACHE = `${CACHE_VERSION}-dynamic`;
 

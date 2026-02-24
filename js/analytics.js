@@ -1,5 +1,5 @@
 /**
- * XTREME BIKE MANAGEMENT — ANALYTICS.JS
+ * CYKLBOARD MANAGEMENT — ANALYTICS.JS
  * Chart.js-powered analytics for the Dashboard
  *
  * Charts:
@@ -8,9 +8,9 @@
  *   3. Line   — Ingresos últimos 7 días (from Supabase reservations)
  */
 
-window.XBM = window.XBM || {};
+window.CYKL = window.CYKL || {};
 
-XBM.Analytics = (function () {
+CYKL.Analytics = (function () {
     'use strict';
 
     /* ── DESIGN TOKENS ────────────────────────────────────────── */
@@ -57,7 +57,7 @@ XBM.Analytics = (function () {
        CHART 1 — DONUT: ESTADO DE SALA (REAL-TIME)
     ══════════════════════════════════════════════════════════ */
     function getDonutData() {
-        const stats = XBM.getStats?.() || { available: 20, occupied: 0, blocked: 0 };
+        const stats = CYKL.getStats?.() || { available: 20, occupied: 0, blocked: 0 };
         const total = stats.available + stats.occupied + stats.blocked;
         const pct = total > 0 ? Math.round(((stats.occupied + stats.blocked) / total) * 100) : 0;
 
@@ -181,7 +181,7 @@ XBM.Analytics = (function () {
         }
 
         // Fallback: seed schedule
-        return (XBM.schedule || []).map(cls => ({
+        return (CYKL.schedule || []).map(cls => ({
             label: cls.name.length > 12 ? cls.name.slice(0, 12) + '…' : cls.name,
             capacity: cls.capacity || 20,
             attended: cls.reservations || 0,
@@ -361,7 +361,7 @@ XBM.Analytics = (function () {
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: ctx => ` ${XBM.formatCurrency?.(ctx.raw) || '$' + ctx.raw}`,
+                            label: ctx => ` ${CYKL.formatCurrency?.(ctx.raw) || '$' + ctx.raw}`,
                         },
                     },
                 },
@@ -427,9 +427,9 @@ XBM.Analytics = (function () {
 document.addEventListener('DOMContentLoaded', () => {
     // Wait until Chart.js CDN script has been parsed
     if (window.Chart) {
-        XBM.Analytics.init();
+        CYKL.Analytics.init();
     } else {
         // Retry once after 500ms (CDN may be slow)
-        setTimeout(() => XBM.Analytics.init(), 600);
+        setTimeout(() => CYKL.Analytics.init(), 600);
     }
 });

@@ -1,11 +1,6 @@
-/**
- * XTREME BIKE MANAGEMENT — AUTH.JS
- * Authentication state management, session handling, user profile
- */
+window.CYKL = window.CYKL || {};
 
-window.XBM = window.XBM || {};
-
-XBM.Auth = (function () {
+CYKL.Auth = (function () {
     'use strict';
 
     let currentUser = null;
@@ -118,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btn && !btn._wired) {
         btn._wired = true;
         btn.addEventListener('click', () => {
-            if (confirm('¿Cerrar sesión?')) XBM.Auth.logout();
+            if (confirm('¿Cerrar sesión?')) CYKL.Auth.logout();
         });
     }
 });

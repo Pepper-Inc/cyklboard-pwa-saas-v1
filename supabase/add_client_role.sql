@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- XTREME BIKE — ADD CLIENT ROLE & PERMISSIONS
+-- CYKLBOARD — ADD CLIENT ROLE & PERMISSIONS
 -- Run in: Supabase Dashboard → SQL Editor → New Query
 -- ════════════════════════════════════════════════════════════════
 

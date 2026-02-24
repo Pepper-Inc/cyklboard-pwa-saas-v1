@@ -1,5 +1,5 @@
 /**
- * XTREME BIKE MANAGEMENT — APP.JS
+ * CYKLBOARD MANAGEMENT — APP.JS
  * Main application controller — routing & navigation
  */
 
@@ -39,11 +39,11 @@
         if (!modulesInited[moduleName]) {
             modulesInited[moduleName] = true;
 
-            if (moduleName === 'dashboard' && XBM.Dashboard) XBM.Dashboard.init();
-            if (moduleName === 'roommap' && XBM.RoomMap) XBM.RoomMap.init();
-            if (moduleName === 'checkin' && XBM.CheckIn) XBM.CheckIn.init();
-            if (moduleName === 'staff' && XBM.Users) XBM.Users.init();
-            if (moduleName === 'clients' && XBM.Clients) XBM.Clients.init();
+            if (moduleName === 'dashboard' && CYKL.Dashboard) CYKL.Dashboard.init();
+            if (moduleName === 'roommap' && CYKL.RoomMap) CYKL.RoomMap.init();
+            if (moduleName === 'checkin' && CYKL.CheckIn) CYKL.CheckIn.init();
+            if (moduleName === 'staff' && CYKL.Users) CYKL.Users.init();
+            if (moduleName === 'clients' && CYKL.Clients) CYKL.Clients.init();
         }
 
         currentModule = moduleName;

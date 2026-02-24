@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════
--- XTREME BIKE — DELETE USER PROCEDURE
+-- CYKLBOARD — DELETE USER PROCEDURE
 -- Run in: Supabase Dashboard → SQL Editor → New Query
 -- ════════════════════════════════════════════════════════════════
 

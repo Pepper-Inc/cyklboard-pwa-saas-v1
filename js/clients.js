@@ -1,11 +1,11 @@
 /**
- * XTREME BIKE MANAGEMENT — CLIENTS.JS
+ * CYKLBOARD MANAGEMENT — CLIENTS.JS
  * Module E: Clients Management
  */
 
-window.XBM = window.XBM || {};
+window.CYKL = window.CYKL || {};
 
-XBM.Clients = (function () {
+CYKL.Clients = (function () {
     'use strict';
 
     let clients = [];
@@ -58,7 +58,7 @@ XBM.Clients = (function () {
             return true;
         } catch (err) {
             console.warn('[Clients] Save error:', err.message);
-            XBM.toast({ title: 'Error', msg: err.message, type: 'danger' });
+            CYKL.toast({ title: 'Error', msg: err.message, type: 'danger' });
             return false;
         }
     }
@@ -79,7 +79,7 @@ XBM.Clients = (function () {
 
         if (ok) {
             client.credits_remaining = newVal;
-            XBM.toast({
+            CYKL.toast({
                 title: 'Créditos actualizados',
                 msg: `${client.full_name} ahora tiene ${newVal} créd.`,
                 type: 'success'
@@ -206,7 +206,7 @@ XBM.Clients = (function () {
         const status = document.getElementById('inviteClientStatus');
 
         if (!email || !fullName) {
-            XBM.toast({ title: 'Campos requeridos', msg: 'Email y nombre son obligatorios.', type: 'danger' });
+            CYKL.toast({ title: 'Campos requeridos', msg: 'Email y nombre son obligatorios.', type: 'danger' });
             return;
         }
 
@@ -229,7 +229,7 @@ XBM.Clients = (function () {
 
             status.className = 'invite-status invite-status--ok';
             status.textContent = `✓ Cliente registrado. Enlace enviado a ${email}`;
-            XBM.toast({ title: 'Cliente Creado', msg: fullName, type: 'success' });
+            CYKL.toast({ title: 'Cliente Creado', msg: fullName, type: 'success' });
 
             setTimeout(() => { closeInviteModal(); }, 3000);
 
@@ -247,9 +247,9 @@ XBM.Clients = (function () {
     async function init() {
         await loadAndRender();
         // Solo suscribir 1 vez!
-        if (!XBM.Clients._subscribed) {
+        if (!CYKL.Clients._subscribed) {
             subscribeToClients();
-            XBM.Clients._subscribed = true;
+            CYKL.Clients._subscribed = true;
         }
 
         // Search

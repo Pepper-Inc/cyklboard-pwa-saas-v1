@@ -1,12 +1,12 @@
 /**
- * XTREME BIKE MANAGEMENT — CHECKIN.JS
+ * CYKLBOARD MANAGEMENT — CHECKIN.JS
  * Module B: Instructor Attendance Check-in
  * Persists attendance to Supabase attendances table
  */
 
-window.XBM = window.XBM || {};
+window.CYKL = window.CYKL || {};
 
-XBM.CheckIn = (function () {
+CYKL.CheckIn = (function () {
     'use strict';
 
     let activeClassKey = '1800';
@@ -117,7 +117,7 @@ XBM.CheckIn = (function () {
                     status: newStatus,
                     credits_remaining: user.credits,
                     updated_at: new Date().toISOString(),
-                    updated_by: XBM.Auth?.user?.id || null,
+                    updated_by: CYKL.Auth?.user?.id || null,
                 }).eq('id', existing.id);
             } else {
                 await db.from('attendances').insert({
@@ -126,7 +126,7 @@ XBM.CheckIn = (function () {
                     bike_number: user.bike,
                     credits_remaining: user.credits,
                     status: newStatus,
-                    updated_by: XBM.Auth?.user?.id || null,
+                    updated_by: CYKL.Auth?.user?.id || null,
                 });
             }
         } catch (err) {
@@ -176,7 +176,7 @@ XBM.CheckIn = (function () {
             updateSummaryFromArray(attendees);
         } else {
             // Fall back to local seed data
-            const attendees = XBM.attendees[classKey] || [];
+            const attendees = CYKL.attendees[classKey] || [];
             if (attendees.length === 0) {
                 list.innerHTML = `
           <div style="text-align:center;padding:3rem;color:var(--text-muted);">
@@ -211,7 +211,7 @@ XBM.CheckIn = (function () {
         const creditsClass = user.credits <= 1 ? 'user-card__credits--low' : '';
 
         card.innerHTML = `
-      <div class="user-card__avatar" aria-hidden="true">${XBM.getInitials(user.name)}</div>
+      <div class="user-card__avatar" aria-hidden="true">${CYKL.getInitials(user.name)}</div>
       <div class="user-card__bike" aria-label="Bike ${user.bike}">${user.bike}</div>
       <div class="user-card__info">
         <p class="user-card__name">${user.name}</p>
@@ -250,7 +250,7 @@ XBM.CheckIn = (function () {
 
         card.querySelector(`#attend-${user.id}`)?.addEventListener('click', () => setStatus(user, 'attended', classKey));
         card.querySelector(`#noshow-${user.id}`)?.addEventListener('click', () => setStatus(user, 'noshow', classKey));
-        card.querySelector(`#qr-${user.id}`)?.addEventListener('click', () => XBM.QR?.generateUserQR(user));
+        card.querySelector(`#qr-${user.id}`)?.addEventListener('click', () => CYKL.QR?.generateUserQR(user));
 
         return card;
     }
@@ -268,14 +268,14 @@ XBM.CheckIn = (function () {
             if (newStatus === 'attended' && prevStatus !== 'attended') {
                 if (user.credits > 0) {
                     user.credits--;
-                    XBM.addActivity({ type: 'info', text: `<strong>${user.name}</strong> — 1 crédito descontado. Quedan: ${user.credits}` });
+                    CYKL.addActivity({ type: 'info', text: `<strong>${user.name}</strong> — 1 crédito descontado. Quedan: ${user.credits}` });
                 } else {
-                    XBM.toast({ title: 'Sin créditos', msg: `${user.name} no tiene créditos disponibles.`, type: 'danger' });
+                    CYKL.toast({ title: 'Sin créditos', msg: `${user.name} no tiene créditos disponibles.`, type: 'danger' });
                 }
             }
 
             // Also update local seed if using seed data
-            const seedList = XBM.attendees[classKey];
+            const seedList = CYKL.attendees[classKey];
             if (seedList) {
                 const seedUser = seedList.find(u => u.id === user.id);
                 if (seedUser) { seedUser.status = user.status; seedUser.credits = user.credits; }
@@ -292,11 +292,11 @@ XBM.CheckIn = (function () {
 
         // Toast
         if (user.status === 'attended') {
-            XBM.toast({ title: '✓ Asistió', msg: user.name, type: 'success' });
-            XBM.addActivity({ type: 'success', text: `<strong>${user.name}</strong> — Asistencia confirmada · Bike #${user.bike}` });
+            CYKL.toast({ title: '✓ Asistió', msg: user.name, type: 'success' });
+            CYKL.addActivity({ type: 'success', text: `<strong>${user.name}</strong> — Asistencia confirmada · Bike #${user.bike}` });
         } else if (user.status === 'noshow') {
-            XBM.toast({ title: '✗ No-show', msg: user.name, type: 'danger' });
-            XBM.addActivity({ type: 'danger', text: `<strong>${user.name}</strong> — No-show · Bike #${user.bike} liberada` });
+            CYKL.toast({ title: '✗ No-show', msg: user.name, type: 'danger' });
+            CYKL.addActivity({ type: 'danger', text: `<strong>${user.name}</strong> — No-show · Bike #${user.bike} liberada` });
         }
 
         updateSummary(classKey);
@@ -309,7 +309,7 @@ XBM.CheckIn = (function () {
 
     /* ── UPDATE SUMMARY ──────────────────────────────────────────── */
     function updateSummary(classKey) {
-        const attendees = XBM.attendees[classKey] || [];
+        const attendees = CYKL.attendees[classKey] || [];
         updateSummaryFromArray(attendees);
     }
 
@@ -327,23 +327,23 @@ XBM.CheckIn = (function () {
 
     /* ── BULK ACTIONS ────────────────────────────────────────────── */
     function markAllAttended() {
-        const attendees = XBM.attendees[activeClassKey] || [];
+        const attendees = CYKL.attendees[activeClassKey] || [];
         attendees.forEach(u => { if (u.status === 'pending') { u.status = 'attended'; if (u.credits > 0) u.credits--; } });
         loadClass(activeClassKey);
-        XBM.toast({ title: 'Todos marcados', msg: 'Asistencia completa registrada.', type: 'success' });
+        CYKL.toast({ title: 'Todos marcados', msg: 'Asistencia completa registrada.', type: 'success' });
     }
 
     function markAllNoshow() {
-        const attendees = XBM.attendees[activeClassKey] || [];
+        const attendees = CYKL.attendees[activeClassKey] || [];
         attendees.forEach(u => { if (u.status === 'pending') u.status = 'noshow'; });
         loadClass(activeClassKey);
-        XBM.toast({ title: 'Todos marcados', msg: 'No-show completo registrado.', type: 'danger' });
+        CYKL.toast({ title: 'Todos marcados', msg: 'No-show completo registrado.', type: 'danger' });
     }
 
     /* ── EXPORT CSV ──────────────────────────────────────────────── */
     function exportCheckin() {
-        const attendees = XBM.attendees[activeClassKey] || [];
-        if (!attendees.length) { XBM.toast({ title: 'Sin datos', msg: 'No hay asistentes para exportar.', type: 'info' }); return; }
+        const attendees = CYKL.attendees[activeClassKey] || [];
+        if (!attendees.length) { CYKL.toast({ title: 'Sin datos', msg: 'No hay asistentes para exportar.', type: 'info' }); return; }
 
         const csv = ['Nombre,Bike,Créditos Restantes,Estado', ...attendees.map(u =>
             `"${u.name}",${u.bike},${u.credits},"${statusLabel(u.status)}"`)].join('\n');
@@ -352,7 +352,7 @@ XBM.CheckIn = (function () {
         const a = Object.assign(document.createElement('a'), { href: url, download: `checkin-${activeClassKey}.csv` });
         a.click();
         URL.revokeObjectURL(url);
-        XBM.toast({ title: '↓ Reporte Exportado', msg: 'Archivo CSV generado.', type: 'neon' });
+        CYKL.toast({ title: '↓ Reporte Exportado', msg: 'Archivo CSV generado.', type: 'neon' });
     }
 
     /* ── INIT ────────────────────────────────────────────────────── */
@@ -372,7 +372,7 @@ XBM.CheckIn = (function () {
             activeClassId = key;
             activeClassKey = key;
             await loadClass(key);
-            XBM.toast({ title: 'Clase cargada', msg: sel?.options[sel.selectedIndex]?.text || '', type: 'neon' });
+            CYKL.toast({ title: 'Clase cargada', msg: sel?.options[sel.selectedIndex]?.text || '', type: 'neon' });
         });
 
         document.getElementById('markAllAttendedBtn')?.addEventListener('click', markAllAttended);
