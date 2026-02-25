@@ -6,7 +6,7 @@
 window.CYKL = window.CYKL || {};
 
 /* ── TOAST NOTIFICATIONS ────────────────────────────────────── */
-CYKL.toast = function ({ title, msg = '', type = 'neon', duration = 3500 }) {
+CYKL.toast = function ({ title, msg = '', type = 'neon', duration = 4000 }) {
     const container = document.getElementById('toastContainer');
     if (!container) return;
 
@@ -17,33 +17,42 @@ CYKL.toast = function ({ title, msg = '', type = 'neon', duration = 3500 }) {
         info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
     };
 
-    const colorMap = {
-        success: 'var(--color-success)',
-        danger: 'var(--color-danger)',
-        neon: 'var(--primary-neon)',
-        info: 'var(--color-info)',
-    };
-
     const el = document.createElement('div');
     el.className = `toast toast--${type}`;
-    el.style.color = colorMap[type] || colorMap.neon;
     el.setAttribute('role', 'alert');
     el.innerHTML = `
-    <span class="toast__icon">${icons[type] || icons.neon}</span>
-    <div class="toast__content">
-      <p class="toast__title">${title}</p>
-      ${msg ? `<p class="toast__msg">${msg}</p>` : ''}
-    </div>
-  `;
+        <div class="toast__progress"></div>
+        <span class="toast__icon">${icons[type] || icons.neon}</span>
+        <div class="toast__content">
+            <p class="toast__title">${title}</p>
+            ${msg ? `<p class="toast__msg">${msg}</p>` : ''}
+        </div>
+        <button class="toast__close" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+    `;
+
+    // Progressive bar animation
+    const progressBar = el.querySelector('.toast__progress');
+    if (progressBar) {
+        progressBar.style.animation = `toastProgress ${duration}ms linear forwards`;
+    }
 
     container.appendChild(el);
 
-    // Auto dismiss
     const dismiss = () => {
-        el.classList.add('hiding');
-        el.addEventListener('animationend', () => el.remove(), { once: true });
+        if (el.parentElement) {
+            el.classList.add('hiding');
+            el.addEventListener('animationend', () => el.remove(), { once: true });
+        }
     };
-    setTimeout(dismiss, duration);
+
+    const timeout = setTimeout(dismiss, duration);
+
+    el.querySelector('.toast__close').addEventListener('click', () => {
+        clearTimeout(timeout);
+        dismiss();
+    });
 };
 
 /* ── FORMAT CURRENCY ────────────────────────────────────────── */
