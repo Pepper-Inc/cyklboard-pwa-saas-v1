@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.json" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta name="apple-mobile-web-app-title" content="CYKLboard" />
 
   <!-- Fonts -->
@@ -44,6 +44,13 @@
       <div class="sidenav__brand-text">
         <span class="sidenav__brand-name">CYKLboard</span>
         <span class="sidenav__brand-sub">MANAGEMENT</span>
+      </div>
+      <!-- Connectivity Status -->
+      <div class="sync-status" id="syncStatus" title="Estado de sincronización">
+        <div class="sync-status__dot"></div>
+        <svg class="sync-status__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+        </svg>
       </div>
     </div>
 

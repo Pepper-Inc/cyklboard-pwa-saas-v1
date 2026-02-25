@@ -219,6 +219,31 @@
     border-color: var(--border-color);
     color: var(--text-muted);
     cursor: default;
+    position: relative;
+}
+
+.bike-card--occupied::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    animation: bouncePulse 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes bouncePulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 0.2;
+    }
 }
 
 .bike-card--occupied .bike-card__number {
@@ -231,7 +256,7 @@
 
 .bike-card--occupied:hover {
     border-color: rgba(255, 255, 255, 0.15);
-    transform: scale(1.01);
+    transform: scale(1.02);
 }
 
 .bike-card--occupied .bike-card__user {

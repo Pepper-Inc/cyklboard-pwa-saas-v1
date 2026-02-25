@@ -144,7 +144,7 @@
 /* ── KPI CARDS ──────────────────────────────────────────────── */
 .kpi-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: var(--space-5);
     margin-bottom: var(--space-8);
 }
@@ -778,18 +778,37 @@
 }
 
 @keyframes toastIn {
-    from { opacity: 0; transform: translateX(32px); }
-    to { opacity: 1; transform: translateX(0); }
+    from {
+        opacity: 0;
+        transform: translateX(32px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 @keyframes toastOut {
-    from { opacity: 1; transform: scale(1); }
-    to { opacity: 0; transform: scale(0.9); }
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0.9);
+    }
 }
 
 @keyframes toastProgress {
-    from { width: 100%; }
-    to { width: 0%; }
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0%;
+    }
 }
 
 .toast.hiding {
@@ -805,10 +824,25 @@
     opacity: 0.4;
 }
 
-.toast--success { color: var(--color-success); border-left: 4px solid var(--color-success); }
-.toast--danger { color: var(--color-danger); border-left: 4px solid var(--color-danger); }
-.toast--neon { color: var(--primary-neon); border-left: 4px solid var(--primary-neon); }
-.toast--info { color: var(--color-info); border-left: 4px solid var(--color-info); }
+.toast--success {
+    color: var(--color-success);
+    border-left: 4px solid var(--color-success);
+}
+
+.toast--danger {
+    color: var(--color-danger);
+    border-left: 4px solid var(--color-danger);
+}
+
+.toast--neon {
+    color: var(--primary-neon);
+    border-left: 4px solid var(--primary-neon);
+}
+
+.toast--info {
+    color: var(--color-info);
+    border-left: 4px solid var(--color-info);
+}
 
 .toast__icon {
     width: 22px;

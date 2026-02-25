@@ -175,6 +175,7 @@ body {
   margin-left: var(--sidenav-width);
   min-height: 100dvh;
   padding: var(--space-8);
+  padding-bottom: calc(var(--space-8) + env(safe-area-inset-bottom, 0px));
   background: var(--bg-main);
   position: relative;
 }
@@ -185,6 +186,7 @@ body {
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-6) var(--space-5);
+  padding-top: calc(var(--space-6) + env(safe-area-inset-top, 0px));
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -221,6 +223,72 @@ body {
   color: var(--primary-neon);
   letter-spacing: 0.15em;
   text-transform: uppercase;
+}
+
+/* ── SYNC STATUS ────────────────────────────────────────────── */
+.sync-status {
+  margin-left: auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: var(--text-muted);
+  transition: all var(--transition-normal);
+}
+
+.sync-status__dot {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 7px;
+  height: 7px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  border: 1px solid var(--bg-surface);
+  transition: all var(--transition-normal);
+}
+
+.sync-status__icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0.5;
+  transition: all var(--transition-normal);
+}
+
+/* States */
+.sync-status--online {
+  color: var(--color-success);
+}
+
+.sync-status--online .sync-status__dot {
+  background: var(--color-success);
+  box-shadow: 0 0 6px var(--color-success);
+}
+
+.sync-status--online .sync-status__icon {
+  opacity: 1;
+}
+
+.sync-status--offline {
+  color: var(--color-danger);
+}
+
+.sync-status--offline .sync-status__dot {
+  background: var(--color-danger);
+  box-shadow: 0 0 6px var(--color-danger);
+}
+
+.sync-status--offline .sync-status__icon {
+  opacity: 1;
+}
+
+.sync-status--syncing .sync-status__icon {
+  animation: spin 2s linear infinite;
+  color: var(--primary-neon);
+  opacity: 1;
 }
 
 /* ── SIDENAV MENU ───────────────────────────────────────────── */
@@ -283,6 +351,7 @@ body {
 /* ── SIDENAV FOOTER ─────────────────────────────────────────── */
 .sidenav__footer {
   padding: var(--space-4) var(--space-5);
+  padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--border-color);
 }
 
@@ -513,14 +582,15 @@ h6 {
 .mobile-nav-toggle {
   display: none;
   position: fixed;
-  top: var(--space-4);
-  left: var(--space-4);
+  top: calc(var(--space-6) + env(safe-area-inset-top, 20px));
+  left: calc(var(--space-4) + env(safe-area-inset-left, 0px));
   z-index: 200;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
   cursor: pointer;
   align-items: center;
   justify-content: center;
@@ -565,7 +635,7 @@ h6 {
   .main-content {
     margin-left: 0;
     padding: var(--space-6) var(--space-4);
-    padding-top: calc(var(--space-16) + var(--space-4));
+    padding-top: calc(var(--space-16) + var(--space-8) + env(safe-area-inset-top, 20px));
   }
 
   .mobile-nav-toggle {
@@ -580,7 +650,7 @@ h6 {
 @media (max-width: 480px) {
   .main-content {
     padding: var(--space-4) var(--space-3);
-    padding-top: calc(var(--space-16) + var(--space-2));
+    padding-top: calc(var(--space-16) + var(--space-6) + env(safe-area-inset-top, 20px));
   }
 
   .page-title {

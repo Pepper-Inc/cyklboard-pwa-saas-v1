@@ -82,6 +82,24 @@
         document.getElementById('navBackdrop')?.remove();
     }
 
+    /* ── CONNECTIVITY MONITOR ─────────────────────────────────── */
+    function updateSyncStatus() {
+        const el = document.getElementById('syncStatus');
+        if (!el) return;
+
+        const isOnline = navigator.onLine;
+        el.classList.remove('sync-status--online', 'sync-status--offline', 'sync-status--syncing');
+
+        if (isOnline) {
+            el.classList.add('sync-status--online');
+            el.title = 'Conectado — Nube sincronizada';
+        } else {
+            el.classList.add('sync-status--offline');
+            el.title = 'Desconectado — Modo local activo';
+            CYKL.toast({ title: 'Modo Offline', msg: 'Trabajando localmente. Los cambios se sincronizarán al recuperar conexión.', type: 'info' });
+        }
+    }
+
     /* ── INIT ────────────────────────────────────────────────────── */
     function init() {
         // Nav link clicks
@@ -103,6 +121,11 @@
             e.preventDefault();
             window._pwaInstallPrompt = e;
         });
+
+        // Connectivity listeners
+        window.addEventListener('online', updateSyncStatus);
+        window.addEventListener('offline', updateSyncStatus);
+        updateSyncStatus();
 
         // Init default module
         navigateTo('dashboard');
