@@ -268,7 +268,16 @@ CYKL.RoomMap = (function () {
     function openNewClientModal(name) {
         document.getElementById('clientSuggestions').classList.remove('is-open');
         if (typeof CYKL.Clients?.openInviteModal === 'function') {
-            CYKL.Clients.openInviteModal();
+            CYKL.Clients.openInviteModal((data) => {
+                // Return to booking form and populate
+                const nameInput = document.getElementById('bookingName');
+                const creditsInput = document.getElementById('bookingCredits');
+                if (nameInput) nameInput.value = data.fullName;
+                if (creditsInput) creditsInput.value = data.credits;
+
+                CYKL.toast({ title: 'Datos vinculados', msg: `Créditos (${data.credits}) aplicados a la reserva.`, type: 'info' });
+            });
+
             // Capitalize each word (Title Case)
             const capitalized = name.split(' ')
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())

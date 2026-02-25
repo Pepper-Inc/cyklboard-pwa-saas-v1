@@ -11,6 +11,7 @@ CYKL.Clients = (function () {
     let clients = [];
     let filteredClients = [];
     let editingId = null;
+    let inviteSuccessCallback = null;
 
     /* ── LOAD ALL CLIENTS ───────────────────────────────────── */
     async function loadClients() {
@@ -179,7 +180,13 @@ CYKL.Clients = (function () {
     /* ══════════════════════════════════════════════════════════
        INVITE MODAL (NEW CLIENT)
     ══════════════════════════════════════════════════════════ */
-    function openInviteModal() {
+    function openInviteModal(onSuccess) {
+        if (typeof onSuccess === 'function') {
+            inviteSuccessCallback = onSuccess;
+        } else {
+            inviteSuccessCallback = null;
+        }
+
         // Ensure listeners are attached if init hasn't run yet
         if (!CYKL.Clients._listenersAttached) {
             document.getElementById('sendInviteClientBtn')?.addEventListener('click', submitInvite);
@@ -239,6 +246,12 @@ CYKL.Clients = (function () {
             if (error) throw error;
 
             console.log('[Clients] Invite success for:', email);
+
+            // Pass data back if callback exists
+            if (typeof inviteSuccessCallback === 'function') {
+                inviteSuccessCallback({ fullName, email, phone, credits });
+            }
+
             status.className = 'invite-status invite-status--ok';
             status.textContent = `✓ Cliente registrado. Enlace enviado a ${email}`;
             CYKL.toast({ title: 'Cliente Creado', msg: fullName, type: 'success' });
