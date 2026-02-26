@@ -57,6 +57,7 @@
       background: var(--bg-main);
       color: var(--text-high);
       min-height: 100dvh;
+      height: 100dvh;
       display: grid;
       grid-template-columns: 1fr 1fr;
       -webkit-font-smoothing: antialiased;
@@ -71,9 +72,10 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 3rem;
+      padding: 2rem 2.5rem;
       position: relative;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
 
     .brand-panel::before {
@@ -116,9 +118,9 @@
 
     .brand-logo-img {
       width: 100%;
-      max-width: 280px;
+      max-width: 220px;
       height: auto;
-      margin: 0 auto 1.5rem;
+      margin: 0 auto 1rem;
       filter: drop-shadow(0 0 16px rgba(232,255,0,0.3));
       animation: float 4s ease-in-out infinite;
     }
@@ -130,7 +132,7 @@
 
     .brand-name {
       font-family: var(--font-c);
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 900;
       color: var(--text-high);
       text-transform: uppercase;
@@ -140,20 +142,20 @@
     }
 
     .brand-sub {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 700;
       color: var(--primary-neon);
-      letter-spacing: 0.3em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      margin-bottom: 3rem;
+      margin-bottom: 1.5rem;
     }
 
     .brand-tagline {
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: var(--text-low);
-      line-height: 1.6;
+      line-height: 1.5;
       max-width: 320px;
-      margin: 0 auto 3rem;
+      margin: 0 auto 1.5rem;
     }
 
     .brand-tagline strong { color: var(--text-high); }
@@ -163,8 +165,9 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.6rem;
       text-align: left;
+      width: 100%;
     }
 
     .feature-item {
