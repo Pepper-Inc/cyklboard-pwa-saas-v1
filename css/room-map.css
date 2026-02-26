@@ -108,13 +108,29 @@
     animation: shimmer 3s linear infinite;
 }
 
+/* ── ROOM WRAPPER (Handles specific layout stability) ───────── */
+.room-container {
+    width: 100%;
+    overflow-x: auto;
+    padding: var(--space-4) 0 var(--space-8);
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.room-container>* {
+    min-width: 600px;
+    /* Constrain children to match grid layout */
+    max-width: 700px;
+}
+
 /* ── ROOM GRID ──────────────────────────────────────────────── */
 .room-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: var(--space-3);
-    max-width: 700px;
-    margin: 0 auto var(--space-6);
+    margin: 0 auto;
 }
 
 /* ── BIKE CARD ──────────────────────────────────────────────── */
@@ -137,7 +153,8 @@
 
 .bike-card__number {
     font-family: var(--font-condensed);
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-2xl);
+    /* Larger, more impactful */
     font-weight: 900;
     line-height: 1;
     transition: all var(--transition-fast);
@@ -156,19 +173,29 @@
 }
 
 .bike-card__user {
-    font-size: 9px;
-    font-weight: 600;
+    font-size: 11px;
+    /* Slightly larger */
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     text-align: center;
-    padding: 0 4px;
+    padding: 2px 4px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100%;
-    opacity: 0;
-    transform: translateY(4px);
+    max-width: 90%;
+    opacity: 0.5;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    margin-top: 2px;
     transition: all var(--transition-fast);
+}
+
+/* Names visible when occupied or selected */
+.bike-card--occupied .bike-card__user,
+.bike-card--selected .bike-card__user {
+    opacity: 1;
+    color: var(--text-high);
 }
 
 /* Ripple effect */
@@ -209,8 +236,7 @@
 }
 
 .bike-card--available:hover .bike-card__user {
-    opacity: 0.7;
-    transform: translateY(0);
+    opacity: 0.9;
 }
 
 /* Occupied */
@@ -225,9 +251,18 @@
 .bike-card--occupied::after {
     content: '';
     position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent);
+    pointer-events: none;
+}
+
+.bike-card--occupied::before {
+    content: '';
+    position: absolute;
     inset: -2px;
     border-radius: inherit;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     animation: bouncePulse 3s ease-in-out infinite;
     pointer-events: none;
 }
@@ -260,9 +295,9 @@
 }
 
 .bike-card--occupied .bike-card__user {
+    color: var(--text-high);
     opacity: 1;
-    transform: translateY(0);
-    color: var(--text-low);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 /* Blocked */
@@ -320,14 +355,16 @@
 /* ── RESPONSIVE ─────────────────────────────────────────────── */
 @media (max-width: 700px) {
     .room-grid {
-        grid-template-columns: repeat(4, 1fr);
+        /* Bloqueamos a 5 columnas para mantener posiciones exactas */
+        grid-template-columns: repeat(5, 1fr);
         gap: var(--space-2);
     }
 }
 
 @media (max-width: 480px) {
     .room-grid {
-        grid-template-columns: repeat(4, 1fr);
+        /* Bloqueamos a 5 columnas para mantener posiciones exactas */
+        grid-template-columns: repeat(5, 1fr);
         gap: var(--space-2);
     }
 
