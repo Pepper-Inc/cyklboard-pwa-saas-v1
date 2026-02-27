@@ -120,8 +120,9 @@
 }
 
 .room-container>* {
-    min-width: 600px;
-    /* Constrain children to match grid layout */
+    min-width: 340px;
+    /* Reducido drásticamente para encajar escalarmente en móviles */
+    width: 100%;
     max-width: 700px;
 }
 
@@ -354,6 +355,10 @@
 
 /* ── RESPONSIVE ─────────────────────────────────────────────── */
 @media (max-width: 700px) {
+    .room-container {
+        padding: var(--space-2) 0 var(--space-6);
+    }
+
     .room-grid {
         /* Bloqueamos a 5 columnas para mantener posiciones exactas */
         grid-template-columns: repeat(5, 1fr);
@@ -365,19 +370,35 @@
     .room-grid {
         /* Bloqueamos a 5 columnas para mantener posiciones exactas */
         grid-template-columns: repeat(5, 1fr);
-        gap: var(--space-2);
+        gap: 4px;
+        /* Brecha mínima para maximizar espacio de cards en móviles */
+    }
+
+    .bike-card {
+        border-radius: var(--radius-sm);
+        gap: 2px;
+        /* Menor espacio interno */
     }
 
     .bike-card__number {
-        font-size: var(--font-size-lg);
+        font-size: 1.1rem;
+        /* Escalar texto para que encaje mejor */
     }
 
     .bike-card__icon {
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
+    }
+
+    .bike-card__user {
+        font-size: 8.5px;
+        /* Ajustado para que quepa el nombre sin desbordar */
+        padding: 1px 3px;
+        line-height: 1.1;
     }
 
     .room-stats {
-        gap: var(--space-3);
+        gap: var(--space-2);
+        font-size: var(--font-size-xs);
     }
 }
